@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "409773662465",
+    "project_id": "blogger-s-tictactoe",
+    "storage_bucket": "blogger-s-tictactoe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:409773662465:android:fa6a53b91da3f9def1bb00",
+        "android_client_info": {
+          "package_name": "com.example.bloggerstictactoe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "409773662465-p8cf4vg62la65lc8pql173plgl043erl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlnqtBe8qRuVxQs771nRzmGmdHM-WdRd0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "409773662465-p8cf4vg62la65lc8pql173plgl043erl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
