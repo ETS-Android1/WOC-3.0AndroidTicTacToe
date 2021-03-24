@@ -89,8 +89,9 @@ public class LocalplayHuman extends AppCompatActivity implements View.OnClickLis
         }
 
 
-        checkforwin();
 
+        checkfordraw();
+        checkforwin();
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,6 +101,13 @@ public class LocalplayHuman extends AppCompatActivity implements View.OnClickLis
         });
 
 
+    }
+
+    private void checkfordraw() {
+        if(filledposition[0]!=-1&&filledposition[1]!=-1&&filledposition[2]!=-1&&filledposition[3]!=-1&&filledposition[4]!=-1&&filledposition[5]!=-1&&filledposition[6]!=-1&&filledposition[7]!=-1&&filledposition[8]!=-1){
+            header.setText("Draw");
+            active = false;
+        }
     }
 
     private void checkforwin() {

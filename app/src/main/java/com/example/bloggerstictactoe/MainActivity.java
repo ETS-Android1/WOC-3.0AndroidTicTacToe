@@ -18,17 +18,25 @@ import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MainFragment.onFragmentBtnSelected,Fragment_local.onFragmentLocalHumanselected,MainFragment.onFragmentPhotochange{
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MainFragment.onFragmentBtnSelected,Fragment_local.onFragmentLocalHumanselected,MainFragment.onFragmentPhotochange,Fragment_local.onFragmentLocalComselected{
 
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle actionBarDrawerToogle;
@@ -38,7 +46,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     NavigationView navigationView;
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
+
     StorageReference storageReference;
+
+    FirebaseAuth auth;
+
+    ImageView drawerphoto;
+
+
+
+
+
 
 
     @Override
@@ -52,6 +70,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         storageReference = FirebaseStorage.getInstance().getReference();
 
+        auth = FirebaseAuth.getInstance();
+
         profileImage= findViewById(R.id.profilephoto);
 
 
@@ -59,6 +79,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView = findViewById(R.id.navigation);
         navigationView.setNavigationItemSelectedListener(this);
+
+
 
 
         actionBarDrawerToogle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.open,R.string.close);
@@ -70,6 +92,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.container_fragment,new MainFragment());
         fragmentTransaction.commit();
+
+        drawerphoto = findViewById(R.id.drawerphoto);
+
+
+
+
+
 
 
 
@@ -123,7 +152,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragmentTransaction.commit();
         }
         if (item.getItemId() ==R.id.contactus){
-            Toast.makeText(this, "Mail us at pranaypandeyoffical@gmail.com", Toast.LENGTH_SHORT).show();
+           startActivity(new Intent(Intent.ACTION_SENDTO,Uri.parse("mailto:pranaypandeyofficial@gmail.com")));
+
 
         }
 
@@ -162,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if(requestCode==1000){
             if (resultCode==Activity.RESULT_OK){
                 Uri imageuri = data.getData();
-                profileImage.setImageURI(imageuri);
+               // profileImage.setImageURI(imageuri);
 
 
 
@@ -172,11 +202,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void uploadImagetoFirebase(Uri imageuri) {
-        StorageReference fileref = storageReference.child("profile.jpg");
+        StorageReference fileref = storageReference.child("users/"+auth.getCurrentUser().getUid()+"profile.jpg");
         fileref.putFile(imageuri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(MainActivity.this, "Successfully uploaded image", Toast.LENGTH_SHORT).show();
+                fileref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Picasso.get().load(uri).into(profileImage);
+                    }
+                });
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -185,5 +220,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+    }
+
+    @Override
+    public void onCompselected() {
+        startActivity(new Intent(getApplicationContext(),LocalplayComputer.class));
     }
 }

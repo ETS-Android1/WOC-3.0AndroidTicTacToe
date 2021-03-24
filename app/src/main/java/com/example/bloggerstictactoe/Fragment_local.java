@@ -13,6 +13,8 @@ import androidx.fragment.app.Fragment;
 
 public class Fragment_local extends Fragment {
     private onFragmentLocalHumanselected listner;
+    private  onFragmentLocalComselected listner2;
+
 
     @Nullable
     @Override
@@ -23,6 +25,14 @@ public class Fragment_local extends Fragment {
             @Override
             public void onClick(View v) {
                 listner.OnHumanselected();
+            }
+        });
+
+        Button compbutton = view.findViewById(R.id.comp);
+        compbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listner2.onCompselected();
             }
         });
 
@@ -39,10 +49,21 @@ public class Fragment_local extends Fragment {
         }else{
             throw new ClassCastException(context.toString()+" must implement listner");
         }
+
+        if (context instanceof onFragmentLocalComselected){
+            listner2= (onFragmentLocalComselected) context;
+        }else {
+            throw new ClassCastException(context.toString()+ " must implement listner");
+        }
     }
 
     public  interface onFragmentLocalHumanselected{
         public void OnHumanselected();
 
     }
+
+    public interface onFragmentLocalComselected{
+        public void onCompselected();
+    }
 }
+
