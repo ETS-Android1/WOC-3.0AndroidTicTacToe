@@ -7,28 +7,29 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/profilephoto"
+        android:layout_width="113dp"
+        android:layout_height="139dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.162"
+        app:layout_constraintHorizontal_bias="0.152"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.154"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintVertical_bias="0.164"
+        app:srcCompat="@drawable/ic_android_black_24dp"
+        tools:ignore="VectorDrawableCompat" />
 
     <EditText
+        android:id="@+id/editText"
         android:layout_width="166dp"
         android:layout_height="60dp"
+        android:text="Name"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toEndOf="@+id/imageView2"
+        app:layout_constraintHorizontal_bias="0.586"
+        app:layout_constraintStart_toEndOf="@+id/profilephoto"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.205"
-        android:text="Name"
-        />
+        app:layout_constraintVertical_bias="0.128" />
 
     <Button
         android:id="@+id/button"
@@ -37,9 +38,23 @@
         android:text="LOG OUT"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.768" />
+        app:layout_constraintVertical_bias="0.865" />
+
+    <Button
+        android:id="@+id/changephoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Change Profile Photo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.749"
+        android:visibility="invisible"/>
 
     <TextView
         android:id="@+id/textView3"
@@ -88,6 +103,42 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.56" />
+
+    <TextView
+        android:id="@+id/fullnameshow"
+        android:layout_width="67dp"
+        android:layout_height="21dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/textView4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/profilephoto"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/phonenumbershow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="56dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/textView4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.711"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_bias="0.12" />
+
+    <TextView
+        android:id="@+id/showemailid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="45dp"
+        android:layout_marginBottom="88dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/textView4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.482"
+        app:layout_constraintStart_toEndOf="@+id/profilephoto"
+        app:layout_constraintTop_toBottomOf="@+id/fullnameshow"
+        app:layout_constraintVertical_bias="0.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

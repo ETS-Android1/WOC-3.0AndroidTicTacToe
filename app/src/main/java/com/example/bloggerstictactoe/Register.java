@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,24 +14,35 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import pl.droidsonroids.gif.GifImageView;
 
 public class Register extends AppCompatActivity {
-    EditText user,pass;
+    EditText user,pass,name,mobilenumber;
     Button registerbutton;
     FirebaseAuth Auth;
     TextView loginbutton;
     GifImageView image;
+    FirebaseFirestore fstore;
+    String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+
+        name = findViewById(R.id.name);
+        mobilenumber = findViewById(R.id.number);
         user = findViewById(R.id.user1);
         pass = findViewById(R.id.pass1);
         registerbutton = findViewById(R.id.butregis);
@@ -38,6 +50,7 @@ public class Register extends AppCompatActivity {
         image = findViewById(R.id.gif);
 
         Auth = FirebaseAuth.getInstance();
+        fstore = FirebaseFirestore.getInstance();
 
         if(Auth.getCurrentUser() != null ){
             startActivity(new Intent(getApplicationContext(),MainActivity.class));
@@ -48,6 +61,8 @@ public class Register extends AppCompatActivity {
             public void onClick(View v) {
                 String email = user.getText().toString().trim();
                 String password = pass.getText().toString().trim();
+                String fullname = name.getText().toString();
+                String number = mobilenumber.getText().toString();
 
                 if (TextUtils.isEmpty(email)){
                     user.setError("Email is required!");
@@ -71,6 +86,18 @@ public class Register extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
                             Toast.makeText(Register.this, "User Registered Sussessfully", Toast.LENGTH_SHORT).show();
+                            userID = Auth.getCurrentUser().getUid();
+                            DocumentReference documentReference = fstore.collection("users").document(userID);
+                            Map<String,Object> user = new HashMap<>();
+                            user.put("Name",fullname);
+                            user.put("email",email);
+                            user.put("mobile",number);
+                            documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d("TAG", "onSuccess: user profile is created for "+ userID);
+                                }
+                            });
                             startActivity(new Intent(getApplicationContext(),MainActivity.class));}
 
                         else{

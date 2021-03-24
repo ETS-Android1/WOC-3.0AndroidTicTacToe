@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_centerInParent="true"
+        android:elevation="30dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="98dp"
+                android:orientation="horizontal"
+                android:id="@+id/lay1">
+
+                <Button
+                    android:layout_width="98dp"
+                    android:layout_height="match_parent"
+                    android:textSize="60sp"
+                    app:backgroundTint="@color/white"
+                    tools:text="X"
+                    android:tag="0"
+                    android:textColor="@android:color/black"
+                    android:id="@+id/but1"/>
+
+                <View
+                    android:layout_width="3dp"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/black"/>
+
+                <Button
+                    android:layout_width="98dp"
+                    android:layout_height="match_parent"
+                    android:textSize="60sp"
+                    app:backgroundTint="@color/white"
+                    tools:text="X"
+                    android:tag="1"
+                    android:textColor="@android:color/black"
+                    android:id="@+id/but2"/>
+
+                <View
+                    android:layout_width="3dp"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/black"/>
+
+                <Button
+                    android:layout_width="98dp"
+                    android:layout_height="match_parent"
+                    android:textSize="60sp"
+                    app:backgroundTint="@color/white"
+                    tools:text="X"
+                    android:tag="2"
+                    android:textColor="@android:color/black"
+                    android:id="@+id/but3"/>
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:background="@android:color/black"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="98dp"
+                android:orientation="horizontal"
+                >
+
+                <Button
+                    android:layout_width="98dp"
+                    android:layout_height="match_parent"
+                    android:textSize="60sp"
+                    app:backgroundTint="@color/white"
+                    tools:text="X"
+                    android:tag="3"
+                    android:textColor="@android:color/black"
+                    android:id="@+id/but4"/>
+
+                <View
+                    android:layout_width="3dp"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/black"/>
+
+                <Button
+                    android:layout_width="98dp"
+                    android:layout_height="match_parent"
+                    android:textSize="60sp"
+                    app:backgroundTint="#FFFFFF"
+                    tools:text="O"
+                    android:tag="4"
+                    android:textColor="@android:color/black"
+                    android:id="@+id/but5"/>
+
+                <View
+                    android:layout_width="3dp"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/black"/>
+
+                <Button
+                    android:layout_width="98dp"
+                    android:layout_height="match_parent"
+                    android:textSize="60sp"
+                    app:backgroundTint="@color/white"
+                    tools:text="X"
+                    android:tag="5"
+                    android:textColor="@android:color/black"
+                    android:id="@+id/but6"/>
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:background="@android:color/black"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="98dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:layout_width="98dp"
+                    android:layout_height="match_parent"
+                    android:textSize="60sp"
+                    app:backgroundTint="#F5FFFFFF"
+                    tools:text="X"
+                    android:tag="6"
+                    android:textColor="@android:color/black"
+                    android:id="@+id/but7"/>
+
+                <View
+                    android:layout_width="3dp"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/black"/>
+
+                <Button
+                    android:layout_width="98dp"
+                    android:layout_height="match_parent"
+                    android:textSize="60sp"
+                    app:backgroundTint="#FFFFFF"
+                    tools:text="X"
+                    android:tag="7"
+                    android:textColor="@android:color/black"
+                    android:id="@+id/but8"/>
+
+                <View
+                    android:layout_width="3dp"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/black"/>
+
+                <Button
+                    android:layout_width="98dp"
+                    android:layout_height="match_parent"
+                    android:textSize="60sp"
+                    app:backgroundTint="#F5FFFFFF"
+                    tools:text="X"
+                    android:tag="8"
+                    android:textColor="@android:color/black"
+                    android:id="@+id/but9"/>
+
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+
+    <TextView
+        android:id="@+id/top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="O's Turn"
+        android:translationY="100dp"
+        android:textSize="32sp"
+        android:layout_gravity="center"
+        android:gravity="center"/>
+
+    <Button
+        android:id="@+id/reset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reset"
+        android:layout_centerHorizontal="true"
+        android:translationY="570dp"
+        />
+
+
+</RelativeLayout>
