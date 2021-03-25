@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle actionBarDrawerToogle;
     Toolbar toolbar;
-    ImageView profileImage;
+    //ImageView profileImage;
 
     NavigationView navigationView;
     FragmentManager fragmentManager;
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         auth = FirebaseAuth.getInstance();
 
-        profileImage= findViewById(R.id.profilephoto);
+      //  profileImage= findViewById(R.id.profilephoto);
 
 
         drawerLayout = findViewById(R.id.drawer);
@@ -182,6 +182,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivityForResult(openGalleryIntent,1000);
 
 
+
+
     }
 
 
@@ -203,13 +205,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void uploadImagetoFirebase(Uri imageuri) {
         StorageReference fileref = storageReference.child("users/"+auth.getCurrentUser().getUid()+"profile.jpg");
-        fileref.putFile(imageuri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+
+       fileref.putFile(imageuri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 fileref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        Picasso.get().load(uri).into(profileImage);
+                        Toast.makeText(MainActivity.this, "Photo added Successfully! Start the application again to see your profile photo", Toast.LENGTH_SHORT).show();
+                     //  Picasso.get().load(uri).into(drawerphoto);
                     }
                 });
             }
