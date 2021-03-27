@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +37,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MainFragment.onFragmentBtnSelected,Fragment_local.onFragmentLocalHumanselected,MainFragment.onFragmentPhotochange,Fragment_local.onFragmentLocalComselected{
 
     DrawerLayout drawerLayout;
@@ -53,7 +57,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     ImageView drawerphoto;
 
+    public Uri profileImageuri;
 
+    FirebaseAuth Auth;
+    FirebaseFirestore fstore;
+    String userID;
 
 
 
@@ -95,7 +103,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         drawerphoto = findViewById(R.id.drawerphoto);
 
-
+        Auth = FirebaseAuth.getInstance();
+        userID = Auth.getCurrentUser().getUid();
 
 
 
@@ -131,8 +140,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragmentTransaction.commit();
         }
         if (item.getItemId() ==R.id.users){
-            Toast.makeText(this, "Users", Toast.LENGTH_SHORT).show();
-            fragmentManager = getSupportFragmentManager();
+            startActivity(new Intent(getApplicationContext(),Users.class));
+
+           fragmentManager = getSupportFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.container_fragment,new Fragment_users());
             fragmentTransaction.commit();
@@ -196,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Uri imageuri = data.getData();
                // profileImage.setImageURI(imageuri);
 
-
+                profileImageuri = imageuri;
 
                 uploadImagetoFirebase(imageuri);
             }

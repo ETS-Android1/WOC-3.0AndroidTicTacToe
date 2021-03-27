@@ -2,7 +2,9 @@ package com.example.bloggerstictactoe;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,9 +15,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -25,6 +29,9 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainFragment extends Fragment {
     private onFragmentBtnSelected listner;
@@ -44,6 +51,9 @@ public class MainFragment extends Fragment {
 
 
 
+
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -81,6 +91,7 @@ public class MainFragment extends Fragment {
                 fname.setText(value.getString("Name"));
                 femail.setText(value.getString("email"));
                 fmobile.setText(value.getString("mobile"));
+
             }
         });
 
@@ -92,12 +103,20 @@ public class MainFragment extends Fragment {
 
 
         StorageReference profileRef = storageReference.child("users/"+Auth.getCurrentUser().getUid()+"profile.jpg");
+
+
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 Picasso.get().load(uri).into(profileImage);
             }
         });
+
+
+
+
+
+
 
 
 

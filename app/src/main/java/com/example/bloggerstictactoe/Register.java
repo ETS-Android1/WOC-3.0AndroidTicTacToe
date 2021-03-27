@@ -35,10 +35,13 @@ public class Register extends AppCompatActivity {
     FirebaseFirestore fstore;
     String userID;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+
 
 
         name = findViewById(R.id.name);
@@ -63,6 +66,8 @@ public class Register extends AppCompatActivity {
                 String password = pass.getText().toString().trim();
                 String fullname = name.getText().toString();
                 String number = mobilenumber.getText().toString();
+
+
 
                 if (TextUtils.isEmpty(email)){
                     user.setError("Email is required!");
@@ -92,6 +97,7 @@ public class Register extends AppCompatActivity {
                             user.put("Name",fullname);
                             user.put("email",email);
                             user.put("mobile",number);
+
                             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {

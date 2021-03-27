@@ -11,8 +11,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BloggersTicTacToe">
-        <activity android:name=".LocalplayComputer"
+        <activity android:name=".Users"
             android:parentActivityName=".MainActivity"></activity>
+        <activity
+            android:name=".LocalplayComputer"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".LocalplayHuman"
             android:parentActivityName=".MainActivity" />
