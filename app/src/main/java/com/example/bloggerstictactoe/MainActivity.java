@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         drawerLayout.closeDrawer(GravityCompat.START);
         if (item.getItemId() ==R.id.local){
-            Toast.makeText(this, "Local", Toast.LENGTH_SHORT).show();
+
             fragmentManager = getSupportFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.container_fragment,new Fragment_local());
@@ -129,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragmentTransaction.commit();
         }
         if (item.getItemId() ==R.id.users){
+            Toast.makeText(this, "Click on User profile photo to see his Blogs", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(getApplicationContext(),Users.class));
 
            fragmentManager = getSupportFragmentManager();

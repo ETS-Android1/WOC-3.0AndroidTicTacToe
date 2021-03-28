@@ -68,7 +68,7 @@ public class CreateNewBlog extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Toast.makeText(CreateNewBlog.this, "Blog Saved Successfully", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                        startActivity(new Intent(getApplicationContext(),Blogs.class));
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
