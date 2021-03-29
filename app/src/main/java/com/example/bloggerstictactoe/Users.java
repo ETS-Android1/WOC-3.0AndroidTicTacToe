@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -25,11 +27,16 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Users extends AppCompatActivity {
 
     private RecyclerView mFirestoreList;
     private FirebaseFirestore firebaseFirestore;
     private FirestoreRecyclerAdapter adapter;
+    String userId;
+    FirebaseAuth auth;
 
     TextView textviewofimageurlfromfirestore;
     StorageReference storageReference;
@@ -44,6 +51,8 @@ public class Users extends AppCompatActivity {
             firebaseFirestore = FirebaseFirestore.getInstance();
             textviewofimageurlfromfirestore = findViewById(R.id.uidtextbox);
 
+            auth = FirebaseAuth.getInstance();
+                    
         Query query = firebaseFirestore.collection("users");
 
         FirestoreRecyclerOptions<UsersModel> options = new FirestoreRecyclerOptions.Builder<UsersModel>()
@@ -92,6 +101,22 @@ public class Users extends AppCompatActivity {
 
                    }
                });
+               
+               holder.buttonaddfriend.setOnClickListener(new View.OnClickListener() {
+                   @Override
+                   public void onClick(View v) {
+                       userId = auth.getCurrentUser().getUid();
+                       DocumentReference docref = firebaseFirestore.collection("Friendsof"+userId).document(model.getUserUid());
+                       Map<String,Object> friend = new HashMap<>();
+                       friend.put("userIDoffriend",model.getUserUid());
+                       docref.set(friend).addOnSuccessListener(new OnSuccessListener<Void>() {
+                           @Override
+                           public void onSuccess(Void aVoid) {
+                               Toast.makeText(Users.this, "Friend added", Toast.LENGTH_SHORT).show();
+                           }
+                       });
+                   }
+               });
 
             }
         };
@@ -109,6 +134,7 @@ public class Users extends AppCompatActivity {
         private TextView list_mobile;
         private TextView list_uid;
         private ImageView list_image;
+        private Button buttonaddfriend;
 
 
 
@@ -120,6 +146,7 @@ public class Users extends AppCompatActivity {
             list_mobile = itemView.findViewById(R.id.mobiletextformfirestore);
             list_uid = itemView.findViewById(R.id.uidtextbox);
             list_image = itemView.findViewById(R.id.firebaseprofileimage);
+            buttonaddfriend = itemView.findViewById(R.id.addfriendinusers);
 
         }
     }

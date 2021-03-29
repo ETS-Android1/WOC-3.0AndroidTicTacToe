@@ -138,11 +138,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragmentTransaction.commit();
         }
         if (item.getItemId() ==R.id.friends){
-            Toast.makeText(this, "Friends", Toast.LENGTH_SHORT).show();
-            fragmentManager = getSupportFragmentManager();
-            fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.container_fragment,new Fragment_friends());
-            fragmentTransaction.commit();
+            startActivity(new Intent(getApplicationContext(),Friends.class));
+
         }
         if (item.getItemId() ==R.id.tournament){
             Toast.makeText(this, "Tournaments", Toast.LENGTH_SHORT).show();
