@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragmentTransaction.commit();
         }
         if (item.getItemId() ==R.id.play){
+            startActivity(new Intent(getApplicationContext(),Play.class));
             Toast.makeText(this, "Play", Toast.LENGTH_SHORT).show();
             fragmentManager = getSupportFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();

@@ -11,8 +11,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BloggersTicTacToe">
-        <activity android:name=".Friends"
-            android:parentActivityName=".MainActivity"></activity>
+        <activity android:name=".PlayOnline"></activity>
+        <activity android:name=".Play" />
+        <activity
+            android:name=".Friends"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".Users_Blogs"
             android:parentActivityName=".Users" />
