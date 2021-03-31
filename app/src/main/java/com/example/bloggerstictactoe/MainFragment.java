@@ -46,6 +46,8 @@ public class MainFragment extends Fragment {
 
     StorageReference storageReference;
 
+    FirebaseAuth auth;
+
 
 
 
@@ -65,6 +67,8 @@ public class MainFragment extends Fragment {
                 listner.onButtonSelected();
             }
         });
+
+        //updateuserstat("online");
 
         Button changeprofilephoto = view.findViewById(R.id.changephoto);
         changeprofilephoto.setOnClickListener(new View.OnClickListener() {
@@ -152,5 +156,34 @@ public class MainFragment extends Fragment {
         public void onPhotoChangeSelected();
     }
 
+   /* private void updateuserstat(String state){
+        DocumentReference documentReference = fstore.collection("users").document(userID);
+        documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                Map<String, Object> status = new HashMap<>();
+                status.put("status",state);
+                documentReference.update(status);
+            }
+        });
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        updateuserstat("online");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        updateuserstat("offline");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        updateuserstat("offline");
+    }*/
 }

@@ -46,6 +46,8 @@ public class Users extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users);
 
+
+
         storageReference = FirebaseStorage.getInstance().getReference();
             mFirestoreList = findViewById(R.id.firestore_list);
             firebaseFirestore = FirebaseFirestore.getInstance();
@@ -76,6 +78,11 @@ public class Users extends AppCompatActivity {
                 holder.list_mobile.setText(model.getMobile());
                 holder.list_uid.setText(model.getUserUid());
 
+                String status = model.getStatus();
+
+                if (status == "online"){
+                    holder.statusimage.setVisibility(View.VISIBLE);
+                }
 
 
 
@@ -135,6 +142,7 @@ public class Users extends AppCompatActivity {
         private TextView list_uid;
         private ImageView list_image;
         private Button buttonaddfriend;
+        private ImageView statusimage;
 
 
 
@@ -147,6 +155,7 @@ public class Users extends AppCompatActivity {
             list_uid = itemView.findViewById(R.id.uidtextbox);
             list_image = itemView.findViewById(R.id.firebaseprofileimage);
             buttonaddfriend = itemView.findViewById(R.id.addfriendinusers);
+            statusimage = itemView.findViewById(R.id.statusimage);
 
         }
     }

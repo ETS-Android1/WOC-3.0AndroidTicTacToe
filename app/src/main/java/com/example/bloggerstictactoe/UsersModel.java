@@ -5,14 +5,16 @@ public class UsersModel {
     private String email;
     private String mobile;
     private String userUid;
+    private String status;
 
     private  UsersModel(){}
 
-    private  UsersModel(String Name,String email,String mobile,String userUid){
+    private  UsersModel(String Name,String email,String mobile,String userUid,String status){
         this.Name = Name;
         this.email = email;
         this.mobile = mobile;
         this.userUid = userUid;
+        this.status = status;
     }
 
 
@@ -47,4 +49,8 @@ public class UsersModel {
     public void setUserUid(String userUid) {
         this.userUid = userUid;
     }
+
+    public String getStatus() { return status; }
+
+    public void setStatus(String status) { this.status = status; }
 }

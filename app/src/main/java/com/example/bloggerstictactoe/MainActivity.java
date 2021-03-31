@@ -24,10 +24,17 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MainFragment.onFragmentBtnSelected,Fragment_local.onFragmentLocalHumanselected,MainFragment.onFragmentPhotochange,Fragment_local.onFragmentLocalComselected{
 
@@ -76,6 +83,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView = findViewById(R.id.navigation);
         navigationView.setNavigationItemSelectedListener(this);
+        fstore = FirebaseFirestore.getInstance();
+
 
 
 
@@ -227,5 +236,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onCompselected() {
         startActivity(new Intent(getApplicationContext(),LocalplayComputer.class));
+    }
+
+    private void updateuserstat(String state){
+        DocumentReference documentReference = fstore.collection("users").document(userID);
+        documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                Map<String, Object> status = new HashMap<>();
+                status.put("status",state);
+                documentReference.update(status);
+            }
+        });
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (auth.getCurrentUser()!= null){
+            updateuserstat("online");
+        }
+    }
+
+   @Override
+    protected void onStop() {
+        super.onStop();
+        if (auth.getCurrentUser()!= null){
+        updateuserstat("offline");}
+    }
+
+   @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (auth.getCurrentUser()!= null){
+        updateuserstat("offline");}
     }
 }
