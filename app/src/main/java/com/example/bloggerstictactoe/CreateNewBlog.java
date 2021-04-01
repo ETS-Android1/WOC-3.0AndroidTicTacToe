@@ -38,6 +38,13 @@ public class CreateNewBlog extends AppCompatActivity {
 
         fstore = FirebaseFirestore.getInstance();
 
+        Intent data = getIntent();
+        if (data.getStringExtra("title") != null) {
+
+            titleforblog.setText(data.getStringExtra("title"));
+            contentblog.setText(data.getStringExtra("content"));
+        }
+
 
 
         titleforblog = findViewById(R.id.blogtitleforfirestore);

@@ -238,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivity(new Intent(getApplicationContext(),LocalplayComputer.class));
     }
 
-    private void updateuserstat(String state){
+   private void updateuserstat(String state){
         DocumentReference documentReference = fstore.collection("users").document(userID);
         documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
