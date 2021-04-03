@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -88,17 +89,19 @@ public class MainFragment extends Fragment {
 
         userID = Auth.getCurrentUser().getUid();
 
-        DocumentReference documentReference = fstore.collection("users").document(userID);
-        documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                fname.setText(value.getString("Name"));
-                femail.setText(value.getString("email"));
-                fmobile.setText(value.getString("mobile"));
+      if (userID!=null) {
+          DocumentReference documentReference = fstore.collection("users").document(userID);
+          documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+              @Override
+              public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                  fname.setText(value.getString("Name"));
+                  femail.setText(value.getString("email"));
+                  fmobile.setText(value.getString("mobile"));
 
-            }
-        });
 
+              }
+          });
+      }
         storageReference = FirebaseStorage.getInstance().getReference();
 
 

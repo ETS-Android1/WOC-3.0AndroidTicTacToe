@@ -1,6 +1,7 @@
 package com.example.bloggerstictactoe;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,14 +19,28 @@ import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Users_Blogs extends AppCompatActivity {
 
     private RecyclerView userblogrecycler;
     private FirebaseFirestore fstore;
     String userId;
+    String currentuserid;
+    String currentusername;
     private  FirestoreRecyclerAdapter adapter;
 
     @Override
@@ -37,6 +52,10 @@ public class Users_Blogs extends AppCompatActivity {
         fstore = FirebaseFirestore.getInstance();
         userId = data.getStringExtra("useridforuserblogs");
         userblogrecycler = findViewById(R.id.UserBlogRecyclerViewer);
+
+        currentuserid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+
 
         Query query = fstore.collection("blogs"+userId);
         FirestoreRecyclerOptions<UserBlogsModel> options = new FirestoreRecyclerOptions.Builder<UserBlogsModel>()
@@ -62,10 +81,43 @@ public class Users_Blogs extends AppCompatActivity {
                         popupMenu.getMenu().add("Send Collaboration Request").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                             @Override
                             public boolean onMenuItemClick(MenuItem item) {
-                                Toast.makeText(Users_Blogs.this, "Request Sent", Toast.LENGTH_SHORT).show();
+
+                                Map<String, Object> sendingrequest = new HashMap<>();
+                                sendingrequest.put("approve","false");
+                                sendingrequest.put("name", data.getStringExtra("name"));
+                                sendingrequest.put("requestid",currentuserid);
+                                fstore.collection("blogs"+userId).whereEqualTo("title",model.getTitle())
+                                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
+                                        String documentID = documentSnapshot.getId();
+                                        fstore.collection("blogs"+userId).document(documentID).update(sendingrequest).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Toast.makeText(Users_Blogs.this, "Request Send", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
+                                });
+
                                 return false;
                             }
                         });
+                        if (model.getRequestid()!=null){
+                        if (model.getRequestid().equals(currentuserid) && model.getApprove().equals("true")){
+                        popupMenu.getMenu().add("Collaborate").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(MenuItem item) {
+                                Intent i = new Intent(v.getContext(),EditBlog.class);
+                                i.putExtra("title",model.getTitle());
+                                i.putExtra("content",model.getContent());
+                                i.putExtra("useridofblogowner",data.getStringExtra("useridforuserblogs"));
+                                v.getContext().startActivity(i);
+                                return false;
+
+                            }
+                        });}}
                         popupMenu.show();
                     }
                 });

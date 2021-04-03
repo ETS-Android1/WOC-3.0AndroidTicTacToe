@@ -208,12 +208,21 @@
         android:gravity="center"/>
 
     <Button
-        android:id="@+id/reset"
+        android:id="@+id/recordmymove"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Reset"
+        android:text="Record my move"
         android:layout_centerHorizontal="true"
         android:translationY="570dp"
+        />
+
+    <Button
+        android:id="@+id/loadmove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="load opponent move"
+        android:layout_centerHorizontal="true"
+        android:translationY="620dp"
         />
 
 

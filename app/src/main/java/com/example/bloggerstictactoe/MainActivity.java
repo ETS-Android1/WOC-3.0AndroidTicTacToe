@@ -5,12 +5,16 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,8 +24,10 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -29,6 +35,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -58,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FirebaseAuth Auth;
     FirebaseFirestore fstore;
     String userID;
+
 
 
 
@@ -110,7 +118,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
+     /*   fstore.collection("blogs"+userID).whereEqualTo("approve","false").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
+                String docid = documentSnapshot.getId();
+                NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(MainActivity.this)
+                        .setContentTitle("New Collaboration Request").setContentText("hi");
 
+               Intent intent = new Intent(MainActivity.this,MainActivity.class);
+
+                PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+                builder.setContentIntent(pendingIntent);
+
+                NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+                notificationManager.notify(0,builder.build());
+            }
+        });
+*/
     }
 
     @Override
@@ -238,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivity(new Intent(getApplicationContext(),LocalplayComputer.class));
     }
 
-   private void updateuserstat(String state){
+  /* private void updateuserstat(String state){
         DocumentReference documentReference = fstore.collection("users").document(userID);
         documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
@@ -271,5 +296,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onDestroy();
         if (auth.getCurrentUser()!= null){
         updateuserstat("offline");}
-    }
+    }*/
 }

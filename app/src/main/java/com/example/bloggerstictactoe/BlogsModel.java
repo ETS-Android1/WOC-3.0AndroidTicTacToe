@@ -1,13 +1,14 @@
 package com.example.bloggerstictactoe;
 
 public class BlogsModel {
-    private String content,title;
+    private String content,title,requestid,approve,name;
 
     private BlogsModel(){}
 
     private BlogsModel(String content,String title){
         this.content=content;
         this.title = title;
+
     }
 
     public String getContent() {
@@ -24,5 +25,29 @@ public class BlogsModel {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getRequestid() {
+        return requestid;
+    }
+
+    public void setRequestid(String requestid) {
+        this.requestid = requestid;
+    }
+
+    public String getApprove() {
+        return approve;
+    }
+
+    public void setApprove(String approve) {
+        this.approve = approve;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

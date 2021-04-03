@@ -29,6 +29,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Blogs extends AppCompatActivity  {
 
     private FirebaseFirestore fstore;
@@ -112,10 +115,36 @@ public class Blogs extends AppCompatActivity  {
                                 Intent i = new Intent(v.getContext(),EditBlog.class);
                                 i.putExtra("title",model.getTitle());
                                 i.putExtra("content",model.getContent());
+                                i.putExtra("useridofblogowner",userID);
                                 v.getContext().startActivity(i);
                                 return false;
                             }
                         });
+                        if (model.getRequestid()!=null && model.getApprove().equals("false")){
+                            popupMenu.getMenu().add("approve "+model.getName()+"'s Request")
+                                    .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                        @Override
+                                        public boolean onMenuItemClick(MenuItem item) {
+                                            Map<String,Object> approve = new HashMap<>();
+                                            approve.put("approve","true");
+                                            fstore.collection("blogs"+userID).whereEqualTo("title",model.getTitle())
+                                                    .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                    DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
+                                                    String documentID = documentSnapshot.getId();
+                                                    fstore.collection("blogs"+userID).document(documentID).update(approve).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            Toast.makeText(Blogs.this, model.getName()+"'s Request Approved", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                            return false;
+                                        }
+                                    });
+                        }
                         popupMenu.show();
                     }
                 });

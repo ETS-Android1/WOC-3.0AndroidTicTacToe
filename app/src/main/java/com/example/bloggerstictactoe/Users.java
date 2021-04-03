@@ -1,6 +1,7 @@
 package com.example.bloggerstictactoe;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,7 +22,10 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -37,6 +41,8 @@ public class Users extends AppCompatActivity {
     private FirestoreRecyclerAdapter adapter;
     String userId;
     FirebaseAuth auth;
+  // String currentusername;
+    String currentusername;
 
     TextView textviewofimageurlfromfirestore;
     StorageReference storageReference;
@@ -48,12 +54,20 @@ public class Users extends AppCompatActivity {
 
 
 
+
+
+
+
+
         storageReference = FirebaseStorage.getInstance().getReference();
             mFirestoreList = findViewById(R.id.firestore_list);
             firebaseFirestore = FirebaseFirestore.getInstance();
             textviewofimageurlfromfirestore = findViewById(R.id.uidtextbox);
 
             auth = FirebaseAuth.getInstance();
+
+
+
                     
         Query query = firebaseFirestore.collection("users");
 
@@ -101,10 +115,24 @@ public class Users extends AppCompatActivity {
                holder.list_image.setOnClickListener(new View.OnClickListener() {
                    @Override
                    public void onClick(View v) {
+
+
+                       firebaseFirestore.collection("users").document(auth.getCurrentUser().getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                           @Override
+                           public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                               currentusername = value.getString("Name");
+
+
+
+
                        Intent i = new Intent(v.getContext(),Users_Blogs.class);
                        i.putExtra("useridforuserblogs",model.getUserUid());
+                       i.putExtra("name",currentusername);
                        v.getContext().startActivity(i);
                        Toast.makeText(Users.this, "User "+holder.list_name.getText().toString(), Toast.LENGTH_SHORT).show();
+
+                           }
+                       });
 
                    }
                });

@@ -63,18 +63,19 @@ public class EditBlog extends AppCompatActivity {
                 note.put("title",nTitle);
                 note.put("content",nContent);
 
-                 fstore.collection("blogs"+userID).whereEqualTo("title",data.getStringExtra("title"))
+                 fstore.collection("blogs"+data.getStringExtra("useridofblogowner")).whereEqualTo("title",data.getStringExtra("title"))
                         .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
                                 String documentID = documentSnapshot.getId();
-                                fstore.collection("blogs"+userID).document(documentID).update(note)
+                                fstore.collection("blogs"+data.getStringExtra("useridofblogowner")).document(documentID).update(note)
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        Toast.makeText(EditBlog.this, "Document updated", Toast.LENGTH_SHORT).show();
-                                        startActivity(new Intent(getApplicationContext(),Blogs.class));
+                                        Toast.makeText(EditBlog.this, "Blog updated", Toast.LENGTH_SHORT).show();
+                                        if (data.getStringExtra("useridofblogowner") == userID){startActivity(new Intent(getApplicationContext(),Blogs.class));}
+                                        else{startActivity(new Intent(getApplicationContext(),Users.class));}
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
