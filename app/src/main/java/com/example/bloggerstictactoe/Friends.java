@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -28,6 +29,9 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Friends extends AppCompatActivity {
 
@@ -74,7 +78,7 @@ public class Friends extends AppCompatActivity {
                         holder.list_name.setText(value.getString("Name"));
                         holder.list_email.setText(value.getString("email"));
                         holder.list_mobile.setText(value.getString("mobile"));
-                        holder.buttonaddfriend.setVisibility(View.INVISIBLE);
+
 
                         if( holder.list_uid.getText().toString().isEmpty()){return;}
                         else {
@@ -88,6 +92,27 @@ public class Friends extends AppCompatActivity {
                             });}
                     }
                 });
+                        holder.buttonaddfriend.setText("Request Play");
+                        holder.buttonaddfriend.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Map<String,Object> playrequest = new HashMap<>();
+                                playrequest.put("senderid",userID);
+                                playrequest.put("receiverid",model.getUserIDoffriend());
+                                playrequest.put("approve","false");
+                                playrequest.put("currentuser",userID);
+                                fstore.collection("play"+model.getUserIDoffriend()).document(model.getUserIDoffriend()+"-"+userID).set(playrequest)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Toast.makeText(Friends.this, "Play Request Sent", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                fstore.collection("play"+userID).document(model.getUserIDoffriend()+"-"+userID)
+                                        .set(playrequest);
+                            }
+                        });
+
 
             }
         };

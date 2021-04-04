@@ -31,9 +31,11 @@ public class PlayOnline extends AppCompatActivity implements View.OnClickListene
    private FirebaseAuth auth;
     String userID;
    private String officiallyconfirmedcurrentuser;
-    Button but1,but2,but3,but4,but5,but6,but7,but8,but9,recordmymove,loadmove;
-    private TextView top;
+    Button but1,but2,but3,but4,but5,but6,but7,but8,but9,recordmymove,loadmove,reset;
+     TextView top;
+     Boolean active = true;
     //TextView sendertextid,receivertextid;
+
     String mysymbol;
     String opponentsymbol;
     int filledposition[] = {-1,-1,-1,-1,-1,-1,-1,-1,-1};
@@ -44,6 +46,7 @@ public class PlayOnline extends AppCompatActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_online);
 
+
         Intent data = getIntent();
         senderid = data.getStringExtra("senderid");
         receiverid = data.getStringExtra("receiverid");
@@ -52,14 +55,18 @@ public class PlayOnline extends AppCompatActivity implements View.OnClickListene
         userID = auth.getCurrentUser().getUid();
        /* sendertextid = findViewById(R.id.senderidtext);
         receivertextid = findViewById(R.id.receiveridtext);*/
+        top = findViewById(R.id.top);
+        reset = findViewById(R.id.reset);
 
         if (senderid.equals(userID)) {
             mysymbol = "X";//0
             opponentsymbol = "O";//1
+            top.setText("Your Move "+ mysymbol);
         }
         else {
-            mysymbol = "0";//1
+            mysymbol = "O";//1
             opponentsymbol = "X";//0
+            top.setText("Opponent's Move "+opponentsymbol);
         }
 
 
@@ -108,6 +115,34 @@ public class PlayOnline extends AppCompatActivity implements View.OnClickListene
             @Override
             public void onClick(View v) {
                 gettagfromfirestore();
+
+                checkfordraw();
+                checkforwin();
+
+
+                if (active==true){fstore.collection("play"+receiverid).document(receiverid+"-"+senderid)
+                        .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                            @Override
+                            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                                String officiallyconfirmeduser = value.getString("currentuser");
+
+                                if (officiallyconfirmeduser.equals(userID)){
+                                    top.setText("Your Turn "+mysymbol);
+
+                                }else {
+                                    top.setText("Opponent's turn "+ opponentsymbol);
+                                }
+
+                            }
+                        });}
+
+
+                checkfordraw();
+                checkforwin();
+
+
+
+
             }
         });
 
@@ -115,36 +150,112 @@ public class PlayOnline extends AppCompatActivity implements View.OnClickListene
             @Override
             public void onClick(View v) {
                 Map<String,Object> tag = new HashMap<>();
-                tag.put("tag0",filledposition[0]);
-                tag.put("tag1",filledposition[1]);
-                tag.put("tag2",filledposition[2]);
-                tag.put("tag3",filledposition[3]);
-                tag.put("tag4",filledposition[4]);
-                tag.put("tag5",filledposition[5]);
-                tag.put("tag6",filledposition[6]);
-                tag.put("tag7",filledposition[7]);
-                tag.put("tag8",filledposition[8]);
-                fstore.collection("play").document("1AKTiVTlm7NTBUbtoR5yhPmcBET2-95CeM66Z2EgrEiUa9i6XLB5RzLg1")
+                tag.put("tag0",filledposition[0]+" ");
+                tag.put("tag1",filledposition[1]+" ");
+                tag.put("tag2",filledposition[2]+" ");
+                tag.put("tag3",filledposition[3]+" ");
+                tag.put("tag4",filledposition[4]+" ");
+                tag.put("tag5",filledposition[5]+" ");
+                tag.put("tag6",filledposition[6]+" ");
+                tag.put("tag7",filledposition[7]+" ");
+                tag.put("tag8",filledposition[8]+" ");
+                fstore.collection("play"+receiverid).document(receiverid+"-"+senderid)
                         .update(tag).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(PlayOnline.this, "Your move recorded", Toast.LENGTH_SHORT).show();
+                        if (active==false){
+                            Toast.makeText(PlayOnline.this, "Game ended! To play again click RESET", Toast.LENGTH_SHORT).show();
+                        }
+                       else{ Toast.makeText(PlayOnline.this, "Your move recorded", Toast.LENGTH_SHORT).show();}
                     }
                 });
 
-                gettagfromfirestore();
+               // gettagfromfirestore();
+
+                if (userID.equals(senderid)){
+                    Map<String,Object> update = new HashMap<>();
+                    update.put("currentuser",receiverid);
+                    fstore.collection("play"+receiverid).document(receiverid+"-"+senderid)
+                            .update(update);
+                }
+                else{
+                    Map<String,Object> update = new HashMap<>();
+                    update.put("currentuser",senderid);
+                    fstore.collection("play"+receiverid).document(receiverid+"-"+senderid)
+                            .update(update);
+                }
 
 
-                fstore.collection("play").document("1AKTiVTlm7NTBUbtoR5yhPmcBET2-95CeM66Z2EgrEiUa9i6XLB5RzLg1")
+                fstore.collection("play"+receiverid).document(receiverid+"-"+senderid)
                         .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                             @Override
                             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                                 String officiallyconfirmeduser = value.getString("currentuser");
 
                                 if (officiallyconfirmeduser.equals(userID)){
-                                    if (userID.equals(senderid)){ updatecurrentuser(receiverid); }
-                                    else { updatecurrentuser(senderid); }
+                                    top.setText("Your Turn "+mysymbol);
 
+                                }else {
+                                    top.setText("Opponent's turn "+ opponentsymbol);
+                                }
+
+                            }
+                        });
+                checkfordraw();
+                checkforwin();
+
+            }
+
+           
+        });
+
+        reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                but1.setText(" ");
+                but1.setText(" ");
+                but1.setText(" ");
+                but1.setText(" ");
+                but1.setText(" ");
+                but1.setText(" ");
+                but1.setText(" ");
+                but1.setText(" ");
+                but1.setText(" ");
+
+                for (int i = 0; i < 9; i++) {
+                    filledposition[i] = -1;
+                }
+
+                Map<String, Object> tag = new HashMap<>();
+                tag.put("tag0", filledposition[0] + " ");
+                tag.put("tag1", filledposition[1] + " ");
+                tag.put("tag2", filledposition[2] + " ");
+                tag.put("tag3", filledposition[3] + " ");
+                tag.put("tag4", filledposition[4] + " ");
+                tag.put("tag5", filledposition[5] + " ");
+                tag.put("tag6", filledposition[6] + " ");
+                tag.put("tag7", filledposition[7] + " ");
+                tag.put("tag8", filledposition[8] + " ");
+                fstore.collection("play" + receiverid).document(receiverid + "-" + senderid)
+                        .update(tag).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(PlayOnline.this, "Reset", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                fstore.collection("play" + receiverid).document(receiverid + "-" + senderid)
+                        .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                            @Override
+                            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                                String officiallyconfirmeduser = value.getString("currentuser");
+
+                                if (officiallyconfirmeduser.equals(userID)) {
+                                    top.setText("Your Turn " + mysymbol);
+
+                                } else {
+                                    top.setText("Opponent's turn " + opponentsymbol);
                                 }
 
                             }
@@ -154,54 +265,90 @@ public class PlayOnline extends AppCompatActivity implements View.OnClickListene
         });
 
 
+    }
 
+    private void checkforwin() {
+        int arr[][] = {{0,1,2},{3,4,5},{6,7,8},{0,3,6},{1,4,7},{2,5,8},{0,4,8},{2,4,6}};
+
+        for(int i=0; i<8;i++){
+
+            if (filledposition[arr[i][0]] == filledposition[arr[i][1]] && filledposition[arr[i][1]] == filledposition[arr[i][2]]) {
+                if (filledposition[arr[i][0]]!=-1){
+                    if (filledposition[arr[i][0]]==0){
+                             if (senderid.equals(userID)) {
+                                top.setText("You Won");
+                             }else {
+                                top.setText("You Lost");
+                             }
+                    }
+                    else{
+                            if (receiverid.equals(userID)){  top.setText("You Won");}
+                            else {top.setText("You Lost");}
+
+                    }
+                    active = false;
+                }
+
+            }
+
+
+        }
+    }
+
+    private void checkfordraw() {
+        if(filledposition[0]!=-1&&filledposition[1]!=-1&&filledposition[2]!=-1&&filledposition[3]!=-1&&filledposition[4]!=-1&&filledposition[5]!=-1&&filledposition[6]!=-1&&filledposition[7]!=-1&&filledposition[8]!=-1){
+            top.setText("Draw");
+            active = false;
+        }
     }
 
     private void gettagfromfirestore() {
-        DocumentReference docref =  fstore.collection("play").document("1AKTiVTlm7NTBUbtoR5yhPmcBET2-95CeM66Z2EgrEiUa9i6XLB5RzLg1");
+        DocumentReference docref =  fstore.collection("play"+receiverid).document(receiverid+"-"+senderid);
         docref.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                int filled0,filled1,filled2,filled3,filled4,filled5,filled6,filled7,filled8;
-                filled0 = value.getLong("tag0").intValue();
-                filled1 = value.getLong("tag1").intValue();
-                filled2 = value.getLong("tag2").intValue();
-                filled3 = value.getLong("tag3").intValue();
-                filled4 = value.getLong("tag4").intValue();
-                filled5 = value.getLong("tag5").intValue();
-                filled6 = value.getLong("tag6").intValue();
-                filled7 = value.getLong("tag7").intValue();
-                filled8 = value.getLong("tag8").intValue();
+                String filled0,filled1,filled2,filled3,filled4,filled5,filled6,filled7,filled8;
+                filled0 = value.getString("tag0");
+                filled1 = value.getString("tag1");
+                filled2 = value.getString("tag2");
+                filled3 = value.getString("tag3");
+                filled4 = value.getString("tag4");
+                filled5 = value.getString("tag5");
+                filled6 = value.getString("tag6");
+                filled7 = value.getString("tag7");
+                filled8 = value.getString("tag8");
 
-                if (filled0 == 1){but1.setText("O");}
-                if (filled1== 1){but1.setText("O");}
-                if (filled2== 1){but1.setText("O");}
-                if (filled3== 1){but1.setText("O");}
-                if (filled4== 1){but1.setText("O");}
-                if (filled5== 1){but1.setText("O");}
-                if (filled6== 1){but1.setText("O");}
-                if (filled7== 1){but1.setText("O");}
-                if (filled8== 1){but1.setText("O");}
 
-                if (filled0==0){but1.setText("X");}
-                if (filled1==0){but1.setText("X");}
-                if (filled2==0){but1.setText("X");}
-                if (filled3==0){but1.setText("X");}
-                if (filled4==0){but1.setText("X");}
-                if (filled5==0){but1.setText("X");}
-                if (filled6==0){but1.setText("X");}
-                if (filled7==0){but1.setText("X");}
-                if (filled8==0){but1.setText("X");}
 
-                if (filled0==-1){but1.setText("");}
-                if (filled1==-1){but1.setText("");}
-                if (filled2==-1){but1.setText("");}
-                if (filled3==-1){but1.setText("");}
-                if (filled4==-1){but1.setText("");}
-                if (filled5==-1){but1.setText("");}
-                if (filled6==-1){but1.setText("");}
-                if (filled7==-1){but1.setText("");}
-                if (filled8==-1){but1.setText("");}
+                if (filled0.equals("1 ")){but1.setText("O");filledposition[0] = 1;}
+                if (filled1.equals("1 ")){but2.setText("O");filledposition[1] = 1;}
+                if (filled2.equals("1 ")){but3.setText("O");filledposition[2] = 1;}
+                if (filled3.equals("1 ")){but4.setText("O");filledposition[3] = 1;}
+                if (filled4.equals("1 ")){but5.setText("O");filledposition[4] = 1;}
+                if (filled5.equals("1 ")){but6.setText("O");filledposition[5] = 1;}
+                if (filled6.equals("1 ")){but7.setText("O");filledposition[6] = 1;}
+                if (filled7.equals("1 ")){but8.setText("O");filledposition[7] = 1;}
+                if (filled8.equals("1 ")){but9.setText("O");filledposition[8] = 1;}
+
+                if (filled0.equals("0 ")){but1.setText("X");filledposition[0] = 0;}
+                if (filled1.equals("0 ")){but2.setText("X");filledposition[1] = 0;}
+                if (filled2.equals("0 ")){but3.setText("X");filledposition[2] = 0;}
+                if (filled3.equals("0 ")){but4.setText("X");filledposition[3] = 0;}
+                if (filled4.equals("0 ")){but5.setText("X");filledposition[4] = 0;}
+                if (filled5.equals("0 ")){but6.setText("X");filledposition[5] = 0;}
+                if (filled6.equals("0 ")){but7.setText("X");filledposition[6] = 0;}
+                if (filled7.equals("0 ")){but8.setText("X");filledposition[7] = 0;}
+                if (filled8.equals("0 ")){but9.setText("X");filledposition[8] = 0;}
+
+                if (filled0.equals("-1 ")){but1.setText("");filledposition[0] = -1;}
+                if (filled1.equals("-1 ")){but2.setText("");filledposition[1] = -1;}
+                if (filled2.equals("-1 ")){but3.setText("");filledposition[2] = -1;}
+                if (filled3.equals("-1 ")){but4.setText("");filledposition[3] = -1;}
+                if (filled4.equals("-1 ")){but5.setText("");filledposition[4] = -1;}
+                if (filled5.equals("-1 ")){but6.setText("");filledposition[5] = -1;}
+                if (filled6.equals("-1 ")){but7.setText("");filledposition[6] = -1;}
+                if (filled7.equals("-1 ")){but8.setText("");filledposition[7] = -1;}
+                if (filled8.equals("-1 ")){but9.setText("");filledposition[8] = -1;}
             }
         });
     }
@@ -209,32 +356,34 @@ public class PlayOnline extends AppCompatActivity implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
+        if (active==false){return;}
 
         Button clickedbutton = findViewById(v.getId());
         int clickedtag = Integer.parseInt((v.getTag().toString()));
 
-        fstore.collection("play").document("1AKTiVTlm7NTBUbtoR5yhPmcBET2-95CeM66Z2EgrEiUa9i6XLB5RzLg1")
-                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                        String officiallyconfirmeduser = value.getString("currentuser");
-                        if (officiallyconfirmeduser.equals(userID)){
-                            if (userID.equals(senderid)){
-                                clickedbutton.setText(mysymbol);
-                                filledposition[clickedtag] = 0;
-                                //updatecurrentuser(receiverid);
+       if (filledposition[clickedtag] ==-1) {
+           fstore.collection("play"+receiverid).document(receiverid+"-"+senderid)
+                   .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                       @Override
+                       public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                           String officiallyconfirmeduser = value.getString("currentuser");
+                           if (officiallyconfirmeduser.equals(userID)) {
+                               if (userID.equals(senderid)) {
+                                   clickedbutton.setText(mysymbol);
+                                   filledposition[clickedtag] = 0;
+                                   //updatecurrentuser(receiverid);
 
-                            }
-                            else {clickedbutton.setText(mysymbol);
-                                filledposition[clickedtag] = 1;
-                               // updatecurrentuser(senderid);
-                            }
+                               } else {
+                                   clickedbutton.setText(mysymbol);
+                                   filledposition[clickedtag] = 1;
+                                   // updatecurrentuser(senderid);
+                               }
 
-                        }
-                    }
-                });
+                           }
+                       }
+                   });
 
-
+       }
 /*
        Button clickedbutton = findViewById(v.getId());
        DocumentReference docref = fstore.collection("play").document("1AKTiVTlm7NTBUbtoR5yhPmcBET2-95CeM66Z2EgrEiUa9i6XLB5RzLg1");
@@ -355,10 +504,20 @@ public class PlayOnline extends AppCompatActivity implements View.OnClickListene
     public void updatecurrentuser(String id){
         Map<String,Object> user = new HashMap<>();
         user.put("currentuser",id);
-        fstore.collection("play").document("1AKTiVTlm7NTBUbtoR5yhPmcBET2-95CeM66Z2EgrEiUa9i6XLB5RzLg1")
+        fstore.collection("play"+receiverid).document(receiverid+"-"+senderid)
                 .update(user);
 
     }
 
-
+    @Override
+    protected void onStop() {
+        super.onStop();
+        fstore.collection("play"+senderid).document(receiverid+"-"+senderid).delete();
+        fstore.collection("play"+receiverid).document(receiverid+"-"+senderid).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                startActivity(new Intent(getApplicationContext(),Play.class));
+            }
+        });
+    }
 }

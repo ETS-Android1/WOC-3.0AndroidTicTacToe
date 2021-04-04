@@ -89,7 +89,9 @@ public class MainFragment extends Fragment {
 
         userID = Auth.getCurrentUser().getUid();
 
-      if (userID!=null) {
+      if (userID ==null){
+          startActivity(new Intent(getContext(),Register.class));
+      } else{
           DocumentReference documentReference = fstore.collection("users").document(userID);
           documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
               @Override

@@ -13,8 +13,10 @@
         android:theme="@style/Theme.BloggersTicTacToe">
         <activity android:name=".EditBlog"
             android:parentActivityName=".Blogs"></activity>
-        <activity android:name=".PlayOnline" />
-        <activity android:name=".Play" />
+        <activity android:name=".PlayOnline"
+            android:parentActivityName=".Play"/>
+        <activity android:name=".Play"
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".Friends"
             android:parentActivityName=".MainActivity" />
