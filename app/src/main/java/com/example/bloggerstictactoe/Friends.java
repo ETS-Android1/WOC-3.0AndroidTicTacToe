@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -80,6 +81,7 @@ public class Friends extends AppCompatActivity {
                         holder.list_mobile.setText(value.getString("mobile"));
 
 
+
                         if( holder.list_uid.getText().toString().isEmpty()){return;}
                         else {
                             StorageReference profileref = storageReference.child("users/"+uidofuser+"profile.jpg");
@@ -92,6 +94,34 @@ public class Friends extends AppCompatActivity {
                             });}
                     }
                 });
+
+                holder.list_image.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+
+                        fstore.collection("users").document(auth.getCurrentUser().getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                            @Override
+                            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                             String   currentusername = value.getString("Name");
+
+
+
+
+                                Intent i = new Intent(v.getContext(),Users_Blogs.class);
+                                i.putExtra("useridforuserblogs",uidofuser);
+                                i.putExtra("name",currentusername);
+                                v.getContext().startActivity(i);
+                                Toast.makeText(Friends.this, "User "+holder.list_name.getText().toString(), Toast.LENGTH_SHORT).show();
+
+                            }
+                        });
+
+                    }
+                });
+
+
+
                         holder.buttonaddfriend.setText("Request Play");
                         holder.buttonaddfriend.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -99,8 +129,17 @@ public class Friends extends AppCompatActivity {
                                 Map<String,Object> playrequest = new HashMap<>();
                                 playrequest.put("senderid",userID);
                                 playrequest.put("receiverid",model.getUserIDoffriend());
-                                playrequest.put("approve","false");
+                                playrequest.put("approve","true");
                                 playrequest.put("currentuser",userID);
+                                playrequest.put("tag0", -1 + " ");
+                                playrequest.put("tag1", -1 + " ");
+                                playrequest.put("tag2", -1 + " ");
+                                playrequest.put("tag3", -1 + " ");
+                                playrequest.put("tag4", -1 + " ");
+                                playrequest.put("tag5", -1 + " ");
+                                playrequest.put("tag6", -1 + " ");
+                                playrequest.put("tag7", -1 + " ");
+                                playrequest.put("tag8", -1 + " ");
                                 fstore.collection("play"+model.getUserIDoffriend()).document(model.getUserIDoffriend()+"-"+userID).set(playrequest)
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
@@ -145,11 +184,25 @@ public class Friends extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         adapter.stopListening();
+     /*  if (auth.getCurrentUser()!= null){
+            updateuserstat("offline");}*/
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         adapter.startListening();
+     /*  if (auth.getCurrentUser()!= null){
+          updateuserstat("online"); }*/
     }
+  /*  private void updateuserstat(String state){
+        Map<String,Object> status = new HashMap<>();
+        status.put("status",state);
+        fstore.collection("users").document(userID).update(status); }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (auth.getCurrentUser()!= null){
+            updateuserstat("offline");} }*/
 }

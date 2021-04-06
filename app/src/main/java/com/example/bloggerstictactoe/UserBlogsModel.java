@@ -3,12 +3,14 @@ package com.example.bloggerstictactoe;
 public class UserBlogsModel {
 
     private String content,title,requestid,approve,name;
+    private int likes;
 
     private UserBlogsModel(){}
 
-    private UserBlogsModel(String content,String title){
+    private UserBlogsModel(String content,String title,int likes){
         this.content = content;
         this.title= title;
+        this.likes = likes;
     }
 
     public String getContent() {
@@ -49,5 +51,13 @@ public class UserBlogsModel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
     }
 }

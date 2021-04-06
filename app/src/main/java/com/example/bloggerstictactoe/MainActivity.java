@@ -136,6 +136,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 */
+
+
     }
 
     @Override
@@ -150,7 +152,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         if (item.getItemId() ==R.id.play){
             startActivity(new Intent(getApplicationContext(),Play.class));
-            Toast.makeText(this, "Play", Toast.LENGTH_SHORT).show();
             fragmentManager = getSupportFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.container_fragment,new Fragment_play());
@@ -177,7 +178,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }
         if (item.getItemId() ==R.id.tournament){
-            Toast.makeText(this, "Tournaments", Toast.LENGTH_SHORT).show();
             fragmentManager = getSupportFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.container_fragment,new Fragment_tournament());
@@ -263,38 +263,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivity(new Intent(getApplicationContext(),LocalplayComputer.class));
     }
 
-  /* private void updateuserstat(String state){
-        DocumentReference documentReference = fstore.collection("users").document(userID);
-        documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                Map<String, Object> status = new HashMap<>();
-                status.put("status",state);
-                documentReference.update(status);
-            }
-        });
-
-    }
+   /*private void updateuserstat(String state){
+        Map<String,Object> status = new HashMap<>();
+        status.put("status",state);
+        fstore.collection("users").document(userID).update(status); }
 
     @Override
     protected void onStart() {
         super.onStart();
         if (auth.getCurrentUser()!= null){
-            updateuserstat("online");
-        }
-    }
+            updateuserstat("online"); } }
 
    @Override
     protected void onStop() {
         super.onStop();
         if (auth.getCurrentUser()!= null){
-        updateuserstat("offline");}
-    }
+        updateuserstat("offline");} }
 
    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (auth.getCurrentUser()!= null){
-        updateuserstat("offline");}
-    }*/
+        updateuserstat("offline");} }*/
 }

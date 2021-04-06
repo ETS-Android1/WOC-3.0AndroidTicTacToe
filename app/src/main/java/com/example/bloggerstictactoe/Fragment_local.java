@@ -65,5 +65,6 @@ public class Fragment_local extends Fragment {
     public interface onFragmentLocalComselected{
         public void onCompselected();
     }
+
 }
 

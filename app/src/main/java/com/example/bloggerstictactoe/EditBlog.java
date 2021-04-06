@@ -90,4 +90,26 @@ public class EditBlog extends AppCompatActivity {
             }
         });
     }
+   /* private void updateuserstat(String state){
+        Map<String,Object> status = new HashMap<>();
+        status.put("status",state);
+        fstore.collection("users").document(userID).update(status); }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (auth.getCurrentUser()!= null){
+            updateuserstat("online"); } }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (auth.getCurrentUser()!= null){
+            updateuserstat("offline");} }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (auth.getCurrentUser()!= null){
+            updateuserstat("offline");} }*/
 }

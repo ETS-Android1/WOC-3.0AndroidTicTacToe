@@ -3,13 +3,18 @@ package com.example.bloggerstictactoe;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -70,7 +75,7 @@ public class CreateNewBlog extends AppCompatActivity {
                 Map<String,Object> note = new HashMap<>();
                 note.put("title",nTitle);
                 note.put("content",nContent);
-                
+                note.put("likes",FieldValue.increment(0));
                 docref.set(note).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -84,8 +89,43 @@ public class CreateNewBlog extends AppCompatActivity {
                     }
                 });
 
+             /*   fstore.collection("blogs"+userID).whereEqualTo("title",nTitle)
+                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
+                        String documentID = documentSnapshot.getId();
+                        fstore.collection("blogs"+userID).document(documentID).update("likes",FieldValue.increment(1));
+                        fstore.collection("blogs"+userID).document(documentID).update("likes",FieldValue.increment(-1));
+                    }
+                });*/
+
+
+
 
             }
         });
     }
+    /*private void updateuserstat(String state){
+        Map<String,Object> status = new HashMap<>();
+        status.put("status",state);
+        fstore.collection("users").document(userID).update(status); }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (auth.getCurrentUser()!= null){
+            updateuserstat("online"); } }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (auth.getCurrentUser()!= null){
+            updateuserstat("offline");} }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (auth.getCurrentUser()!= null){
+            updateuserstat("offline");} }*/
 }

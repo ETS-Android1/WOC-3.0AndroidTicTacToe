@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
@@ -30,11 +32,12 @@ public class PlayOnline extends AppCompatActivity implements View.OnClickListene
    private FirebaseFirestore fstore;
    private FirebaseAuth auth;
     String userID;
-   private String officiallyconfirmedcurrentuser;
-    Button but1,but2,but3,but4,but5,but6,but7,but8,but9,recordmymove,loadmove,reset;
+   TextView rules;
+   ImageView rulesimg;
+    Button but1,but2,but3,but4,but5,but6,but7,but8,but9,loadmove,reset;
      TextView top;
      Boolean active = true;
-    //TextView sendertextid,receivertextid;
+
 
     String mysymbol;
     String opponentsymbol;
@@ -53,36 +56,52 @@ public class PlayOnline extends AppCompatActivity implements View.OnClickListene
         fstore = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
         userID = auth.getCurrentUser().getUid();
-       /* sendertextid = findViewById(R.id.senderidtext);
-        receivertextid = findViewById(R.id.receiveridtext);*/
+
+        rules = findViewById(R.id.rules);
+        rulesimg = findViewById(R.id.rulesimg);
+
         top = findViewById(R.id.top);
         reset = findViewById(R.id.reset);
 
         if (senderid.equals(userID)) {
             mysymbol = "X";//0
             opponentsymbol = "O";//1
-            top.setText("Your Move "+ mysymbol);
+
         }
         else {
             mysymbol = "O";//1
             opponentsymbol = "X";//0
-            top.setText("Opponent's Move "+opponentsymbol);
+
         }
 
+        fstore.collection("play"+receiverid).document(receiverid+"-"+senderid)
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                        String officiallyconfirmeduser = value.getString("currentuser");
 
+                        if (officiallyconfirmeduser.equals(userID)){
+                            top.setText("Your Turn "+mysymbol);
 
+                        }else {
+                            top.setText("Opponent's turn "+ opponentsymbol);
+                        }
 
-    /*    DocumentReference docref = fstore.collection("play").document("1AKTiVTlm7NTBUbtoR5yhPmcBET2-95CeM66Z2EgrEiUa9i6XLB5RzLg1");
-        docref.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    }
+                });
+
+        rules.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                senderid = value.getString("Senderid");
-                receiverid = value.getString("Receiverid");
-                sendertextid.setText(value.getString("Senderid"));
-                receivertextid.setText(value.getString("Receiverid"));
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(),PlayOnlineRules.class));
             }
         });
-*/
+        rulesimg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(),PlayOnlineRules.class));
+            }
+        });
 
 
 
@@ -96,7 +115,6 @@ public class PlayOnline extends AppCompatActivity implements View.OnClickListene
         but8 = findViewById(R.id.but8);
         but9 = findViewById(R.id.but9);
         top = findViewById(R.id.top);
-        recordmymove = findViewById(R.id.recordmymove);
         loadmove = findViewById(R.id.loadmove);
 
 
@@ -120,7 +138,7 @@ public class PlayOnline extends AppCompatActivity implements View.OnClickListene
                 checkforwin();
 
 
-                if (active==true){fstore.collection("play"+receiverid).document(receiverid+"-"+senderid)
+                if (active){fstore.collection("play"+receiverid).document(receiverid+"-"+senderid)
                         .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                             @Override
                             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -146,120 +164,37 @@ public class PlayOnline extends AppCompatActivity implements View.OnClickListene
             }
         });
 
-        recordmymove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Map<String,Object> tag = new HashMap<>();
-                tag.put("tag0",filledposition[0]+" ");
-                tag.put("tag1",filledposition[1]+" ");
-                tag.put("tag2",filledposition[2]+" ");
-                tag.put("tag3",filledposition[3]+" ");
-                tag.put("tag4",filledposition[4]+" ");
-                tag.put("tag5",filledposition[5]+" ");
-                tag.put("tag6",filledposition[6]+" ");
-                tag.put("tag7",filledposition[7]+" ");
-                tag.put("tag8",filledposition[8]+" ");
-                fstore.collection("play"+receiverid).document(receiverid+"-"+senderid)
-                        .update(tag).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        if (active==false){
-                            Toast.makeText(PlayOnline.this, "Game ended! To play again click RESET", Toast.LENGTH_SHORT).show();
-                        }
-                       else{ Toast.makeText(PlayOnline.this, "Your move recorded", Toast.LENGTH_SHORT).show();}
-                    }
-                });
-
-               // gettagfromfirestore();
-
-                if (userID.equals(senderid)){
-                    Map<String,Object> update = new HashMap<>();
-                    update.put("currentuser",receiverid);
-                    fstore.collection("play"+receiverid).document(receiverid+"-"+senderid)
-                            .update(update);
-                }
-                else{
-                    Map<String,Object> update = new HashMap<>();
-                    update.put("currentuser",senderid);
-                    fstore.collection("play"+receiverid).document(receiverid+"-"+senderid)
-                            .update(update);
-                }
-
-
-                fstore.collection("play"+receiverid).document(receiverid+"-"+senderid)
-                        .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                            @Override
-                            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                                String officiallyconfirmeduser = value.getString("currentuser");
-
-                                if (officiallyconfirmeduser.equals(userID)){
-                                    top.setText("Your Turn "+mysymbol);
-
-                                }else {
-                                    top.setText("Opponent's turn "+ opponentsymbol);
-                                }
-
-                            }
-                        });
-                checkfordraw();
-                checkforwin();
-
-            }
-
-           
-        });
-
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (active==false)
+                {
+                    fstore.collection("play"+receiverid).document(receiverid+"-"+senderid).delete();
+                    fstore.collection("play"+senderid).document(receiverid+"-"+senderid).delete();
 
-                but1.setText(" ");
-                but1.setText(" ");
-                but1.setText(" ");
-                but1.setText(" ");
-                but1.setText(" ");
-                but1.setText(" ");
-                but1.setText(" ");
-                but1.setText(" ");
-                but1.setText(" ");
+                    Map<String, Object> playrequest = new HashMap<>();
+                    playrequest.put("senderid", senderid);
+                    playrequest.put("receiverid", receiverid);
+                    playrequest.put("approve", "true");
+                    playrequest.put("currentuser", userID);
+                    playrequest.put("tag0", -1 + " ");
+                    playrequest.put("tag1", -1 + " ");
+                    playrequest.put("tag2", -1 + " ");
+                    playrequest.put("tag3", -1 + " ");
+                    playrequest.put("tag4", -1 + " ");
+                    playrequest.put("tag5", -1 + " ");
+                    playrequest.put("tag6", -1 + " ");
+                    playrequest.put("tag7", -1 + " ");
+                    playrequest.put("tag8", -1 + " ");
+                    fstore.collection("play" + senderid).document(receiverid + "-" + senderid).set(playrequest);
+                    fstore.collection("play" + receiverid).document(receiverid + "-" + senderid).set(playrequest).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            startActivity(new Intent(getApplicationContext(), Play.class));
 
-                for (int i = 0; i < 9; i++) {
-                    filledposition[i] = -1;
+                        }
+                    });
                 }
-
-                Map<String, Object> tag = new HashMap<>();
-                tag.put("tag0", filledposition[0] + " ");
-                tag.put("tag1", filledposition[1] + " ");
-                tag.put("tag2", filledposition[2] + " ");
-                tag.put("tag3", filledposition[3] + " ");
-                tag.put("tag4", filledposition[4] + " ");
-                tag.put("tag5", filledposition[5] + " ");
-                tag.put("tag6", filledposition[6] + " ");
-                tag.put("tag7", filledposition[7] + " ");
-                tag.put("tag8", filledposition[8] + " ");
-                fstore.collection("play" + receiverid).document(receiverid + "-" + senderid)
-                        .update(tag).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(PlayOnline.this, "Reset", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-                fstore.collection("play" + receiverid).document(receiverid + "-" + senderid)
-                        .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                            @Override
-                            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                                String officiallyconfirmeduser = value.getString("currentuser");
-
-                                if (officiallyconfirmeduser.equals(userID)) {
-                                    top.setText("Your Turn " + mysymbol);
-
-                                } else {
-                                    top.setText("Opponent's turn " + opponentsymbol);
-                                }
-
-                            }
-                        });
 
             }
         });
@@ -280,12 +215,51 @@ public class PlayOnline extends AppCompatActivity implements View.OnClickListene
                              }else {
                                 top.setText("You Lost");
                              }
+
+                        if (active){ fstore.collection("play" + receiverid).document(receiverid + "-" + senderid).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                            @Override
+                            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                                String gameon = value.getString("approve");
+                                if (gameon.equals("true")){fstore.collection("users").document(senderid).update("wins",FieldValue.increment(1));
+                                   }
+                            }
+                        });
+                            }
                     }
                     else{
                             if (receiverid.equals(userID)){  top.setText("You Won");}
                             else {top.setText("You Lost");}
+                        if (active){ fstore.collection("play" + receiverid).document(receiverid + "-" + senderid).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                            @Override
+                            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                                String gameon = value.getString("approve");
+                                if (gameon.equals("true")){ fstore.collection("users").document(receiverid).update("wins",FieldValue.increment(1));}
+                            }
+                        });
+                        }
 
                     }
+                   if (active){  fstore.collection("play" + receiverid).document(receiverid + "-" + senderid).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                       @Override
+                       public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                           String gameon = value.getString("approve");
+                           if (gameon.equals("true")){fstore.collection("users").document(senderid).update("played",FieldValue.increment(1));
+                               fstore.collection("users").document(receiverid).update("played",FieldValue.increment(1));}
+                       }
+                   }); }
+                   Map<String,Object> approve = new HashMap<>();
+                   approve.put("approve","false");
+                    fstore.collection("play" + receiverid).document(receiverid + "-" + senderid).update(approve).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(PlayOnline.this, "Error", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                     active = false;
                 }
 
@@ -298,6 +272,28 @@ public class PlayOnline extends AppCompatActivity implements View.OnClickListene
     private void checkfordraw() {
         if(filledposition[0]!=-1&&filledposition[1]!=-1&&filledposition[2]!=-1&&filledposition[3]!=-1&&filledposition[4]!=-1&&filledposition[5]!=-1&&filledposition[6]!=-1&&filledposition[7]!=-1&&filledposition[8]!=-1){
             top.setText("Draw");
+            if (active){fstore.collection("play" + receiverid).document(receiverid + "-" + senderid).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                @Override
+                public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                    String gameon = value.getString("approve");
+                    if (gameon.equals("true")){ fstore.collection("users").document(senderid).update("played",FieldValue.increment(1));
+                        fstore.collection("users").document(receiverid).update("played",FieldValue.increment(1));}
+                }
+            });
+                }
+            Map<String,Object> approve = new HashMap<>();
+            approve.put("approve","false");
+            fstore.collection("play" + receiverid).document(receiverid + "-" + senderid).update(approve).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(PlayOnline.this, "Error", Toast.LENGTH_SHORT).show();
+                }
+            });
             active = false;
         }
     }
@@ -371,135 +367,70 @@ public class PlayOnline extends AppCompatActivity implements View.OnClickListene
                                if (userID.equals(senderid)) {
                                    clickedbutton.setText(mysymbol);
                                    filledposition[clickedtag] = 0;
-                                   //updatecurrentuser(receiverid);
-
                                } else {
                                    clickedbutton.setText(mysymbol);
                                    filledposition[clickedtag] = 1;
-                                   // updatecurrentuser(senderid);
+
                                }
+                               Map<String,Object> tag = new HashMap<>();
+                               tag.put("tag"+clickedtag,filledposition[clickedtag]+" ");
+                               fstore.collection("play"+receiverid).document(receiverid+"-"+senderid).update(tag);
+
 
                            }
                        }
                    });
 
+
+
        }
-/*
-       Button clickedbutton = findViewById(v.getId());
-       DocumentReference docref = fstore.collection("play").document("1AKTiVTlm7NTBUbtoR5yhPmcBET2-95CeM66Z2EgrEiUa9i6XLB5RzLg1");
-        docref.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-
-                String officiallyconfirmeduser = value.getString("currentuser");
-            }
-        });
-
-        getcurrentuser();
-
-
-
-                if (top.getText().toString().equals(senderid)){
-                    clickedbutton.setText("O");
-
-                    updatecurrentuser(receiverid);
-
-                    getcurrentuser();
-
-
-                    DocumentReference doccref2 = fstore.collection("play").document("1AKTiVTlm7NTBUbtoR5yhPmcBET2-95CeM66Z2EgrEiUa9i6XLB5RzLg1");
-                    doccref2.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-
-                            Map<String,Object> updatingcurrentuser = new HashMap<>();
-                            updatingcurrentuser.put("currentuser",receiverid);
-                            doccref2.update(updatingcurrentuser).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Toast.makeText(PlayOnline.this, "your turn recorder", Toast.LENGTH_SHORT).show();
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(PlayOnline.this, "error", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
-                    });
-
-                }
-                else {
-                    clickedbutton.setText("X");
-
-                    updatecurrentuser(senderid);
-
-                    getcurrentuser();
-                    DocumentReference docref3 = fstore.collection("play").document("1AKTiVTlm7NTBUbtoR5yhPmcBET2-95CeM66Z2EgrEiUa9i6XLB5RzLg1");
-                    docref3.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                            Map<String,Object> updatingcurrentuser2 = new HashMap<>();
-                            updatingcurrentuser2.put("currentuser",senderid);
-                            docref3.update(updatingcurrentuser2).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Toast.makeText(PlayOnline.this, "your turn recorded 2 ", Toast.LENGTH_SHORT).show();
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(PlayOnline.this, "error", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
-                    });
-                }
 
 
 
 
-*/
+        if (userID.equals(senderid)){
+            Map<String,Object> update = new HashMap<>();
+            update.put("currentuser",receiverid);
+            fstore.collection("play"+receiverid).document(receiverid+"-"+senderid)
+                    .update(update);
+        }
+        else{
+            Map<String,Object> update = new HashMap<>();
+            update.put("currentuser",senderid);
+            fstore.collection("play"+receiverid).document(receiverid+"-"+senderid)
+                    .update(update);
+        }
 
+
+
+
+        checkfordraw();
+        checkforwin();
     }
 
-   /* private void getcurrentuser() {
-        DocumentReference document = fstore.collection("play").document("1AKTiVTlm7NTBUbtoR5yhPmcBET2-95CeM66Z2EgrEiUa9i6XLB5RzLg1");
-        document.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+    private void updatetag() {
+        Map<String,Object> tag = new HashMap<>();
+        tag.put("tag0",filledposition[0]+" ");
+        tag.put("tag1",filledposition[1]+" ");
+        tag.put("tag2",filledposition[2]+" ");
+        tag.put("tag3",filledposition[3]+" ");
+        tag.put("tag4",filledposition[4]+" ");
+        tag.put("tag5",filledposition[5]+" ");
+        tag.put("tag6",filledposition[6]+" ");
+        tag.put("tag7",filledposition[7]+" ");
+        tag.put("tag8",filledposition[8]+" ");
+        fstore.collection("play"+receiverid).document(receiverid+"-"+senderid)
+                .update(tag).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                officiallyconfirmedcurrentuser = documentSnapshot.getString("currentuser");
-                top.setText(documentSnapshot.getString("currentuser"));
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(PlayOnline.this, "failed", Toast.LENGTH_SHORT).show();
+            public void onSuccess(Void aVoid) {
+                if (active==false){
+                    Toast.makeText(PlayOnline.this, "Game ended! To play again click RESET", Toast.LENGTH_SHORT).show();
+                }
+                else{ Toast.makeText(PlayOnline.this, "Your move recorded", Toast.LENGTH_SHORT).show();}
             }
         });
-    }*/
+    }
 
-   /* private void updatecurrentuser(String id) {
-        DocumentReference docref = fstore.collection("play").document("1AKTiVTlm7NTBUbtoR5yhPmcBET2-95CeM66Z2EgrEiUa9i6XLB5RzLg1");
-        docref.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                Map<String,Object> currentuser = new HashMap<>();
-                currentuser.put("currentuser",id);
-                docref.update(currentuser).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(PlayOnline.this, "user updated", Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(PlayOnline.this, "failed", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
-    }*/
 
     public void updatecurrentuser(String id){
         Map<String,Object> user = new HashMap<>();
@@ -510,14 +441,8 @@ public class PlayOnline extends AppCompatActivity implements View.OnClickListene
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        fstore.collection("play"+senderid).document(receiverid+"-"+senderid).delete();
-        fstore.collection("play"+receiverid).document(receiverid+"-"+senderid).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                startActivity(new Intent(getApplicationContext(),Play.class));
-            }
-        });
+    protected void onDestroy() {
+        super.onDestroy();
+        startActivity(new Intent(getApplicationContext(),Play.class));
     }
 }

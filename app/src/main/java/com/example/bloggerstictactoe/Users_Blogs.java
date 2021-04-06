@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -26,6 +27,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
@@ -73,7 +75,41 @@ public class Users_Blogs extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull UserBlogsViewHolder holder, int position, @NonNull UserBlogsModel model) {
                 holder.title.setText(model.getTitle());
                 holder.content.setText(model.getContent());
-                
+
+
+                fstore.collection("blogs"+userId).whereEqualTo("title",model.getTitle()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
+                        String documentID = documentSnapshot.getId();
+                        DocumentReference docref = fstore.collection("blogs"+userId).document(documentID);
+                        docref.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                            @Override
+                            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                                holder.likecount.setText(value.getLong("likes").toString());
+                            }
+                        });
+                    }
+                });
+
+                holder.likeimage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        fstore.collection("blogs"+userId).whereEqualTo("title",model.getTitle()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
+                                String documentID = documentSnapshot.getId();
+                                fstore.collection("blogs"+userId).document(documentID).update("likes", FieldValue.increment(1)).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        holder.likeimage.setColorFilter(Color.GREEN);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
                 holder.optionsimage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -132,11 +168,15 @@ public class Users_Blogs extends AppCompatActivity {
         private TextView title;
         private TextView content;
         private ImageView optionsimage;
+        private ImageView likeimage;
+        private TextView likecount;
         public UserBlogsViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.titleforblog);
             content = itemView.findViewById(R.id.contentofblog);
             optionsimage = itemView.findViewById(R.id.optionsimage);
+            likeimage = itemView.findViewById(R.id.likeimage);
+            likecount = itemView.findViewById(R.id.likecount);
         }
     }
 

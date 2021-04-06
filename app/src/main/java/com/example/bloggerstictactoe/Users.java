@@ -66,7 +66,7 @@ public class Users extends AppCompatActivity {
 
             auth = FirebaseAuth.getInstance();
 
-
+        userId = auth.getCurrentUser().getUid();
 
                     
         Query query = firebaseFirestore.collection("users");
@@ -87,6 +87,8 @@ public class Users extends AppCompatActivity {
             @Override
             protected void onBindViewHolder(@NonNull UsersViewHolder holder, int position, @NonNull UsersModel model) {
 
+
+
                 holder.list_name.setText(model.getName());
                 holder.list_email.setText(model.getEmail());
                 holder.list_mobile.setText(model.getMobile());
@@ -94,9 +96,9 @@ public class Users extends AppCompatActivity {
 
                 String status = model.getStatus();
 
-                if (status == "online"){
+              /*  if (status.equals("online")){
                     holder.statusimage.setVisibility(View.VISIBLE);
-                }
+                }*/
 
 
 
@@ -150,9 +152,11 @@ public class Users extends AppCompatActivity {
                                Toast.makeText(Users.this, "Friend added", Toast.LENGTH_SHORT).show();
                            }
                        });
+
                    }
                });
 
+             
             }
         };
 
@@ -191,12 +195,29 @@ public class Users extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+      /*  if (auth.getCurrentUser()!= null){
+            updateuserstat("offline");}*/
         adapter.stopListening();
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+       /* if (auth.getCurrentUser()!= null){
+            updateuserstat("online"); }*/
         adapter.startListening();
+
     }
+
+   /* private void updateuserstat(String state){
+        Map<String,Object> status = new HashMap<>();
+        status.put("status",state);
+        FirebaseFirestore.getInstance().collection("users").document(userId).update(status); }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (auth.getCurrentUser()!= null){
+            updateuserstat("offline");} }*/
 }

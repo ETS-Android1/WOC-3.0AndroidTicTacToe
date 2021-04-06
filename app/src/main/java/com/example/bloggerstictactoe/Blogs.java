@@ -1,6 +1,7 @@
 package com.example.bloggerstictactoe;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,8 +25,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -79,6 +83,22 @@ public class Blogs extends AppCompatActivity  {
             protected void onBindViewHolder(@NonNull BlogsViewHolder holder, int position, @NonNull BlogsModel model) {
                 holder.texttitle.setText(model.getTitle());
                 holder.textcontent.setText(model.getContent());
+                holder.likeimage.setVisibility(View.INVISIBLE);
+
+                fstore.collection("blogs"+userID).whereEqualTo("title",model.getTitle()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
+                        String documentID = documentSnapshot.getId();
+                        DocumentReference docref = fstore.collection("blogs"+userID).document(documentID);
+                        docref.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                            @Override
+                            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                                holder.likecount.setText(value.getLong("likes").toString());
+                            }
+                        });
+                    }
+                });
 
                 holder.optionsimage.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -166,12 +186,16 @@ public class Blogs extends AppCompatActivity  {
             private TextView texttitle;
             private TextView textcontent;
             private ImageView optionsimage;
+            private ImageView likeimage;
+            private TextView likecount;
 
         public BlogsViewHolder(@NonNull View itemView) {
             super(itemView);
             texttitle = itemView.findViewById(R.id.titleforblog);
             textcontent = itemView.findViewById(R.id.contentofblog);
             optionsimage = itemView.findViewById(R.id.optionsimage);
+            likeimage = itemView.findViewById(R.id.likeimage);
+            likecount = itemView.findViewById(R.id.likecount);
         }
     }
 
@@ -179,11 +203,30 @@ public class Blogs extends AppCompatActivity  {
     protected void onStop() {
         super.onStop();
         adapter.stopListening();
+       /* if (auth.getCurrentUser()!= null){
+            updateuserstat("offline");}*/
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         adapter.startListening();
+       /* if (auth.getCurrentUser()!= null){
+            updateuserstat("online");
+        }*/
     }
+
+   /* private void updateuserstat(String state){
+
+        Map<String,Object> status = new HashMap<>();
+        status.put("status",state);
+        fstore.collection("users").document(userID).update(status);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (auth.getCurrentUser()!= null){
+            updateuserstat("offline");}
+    }*/
 }

@@ -38,7 +38,7 @@ public class MainFragment extends Fragment {
     private onFragmentBtnSelected listner;
     private  onFragmentPhotochange listner2;
 
-    TextView fname,femail,fmobile;
+    TextView fname,femail,fmobile,played,won;
     FirebaseAuth Auth;
     FirebaseFirestore fstore;
     String userID;
@@ -83,6 +83,8 @@ public class MainFragment extends Fragment {
         fname = view.findViewById(R.id.fstorename);
         fmobile = view.findViewById(R.id.fstoremobile);
         femail = view.findViewById(R.id.fstoreemail);
+        played = view.findViewById(R.id.gamesplayeddisplay);
+        won = view.findViewById(R.id.gameswondisplay);
 
         Auth = FirebaseAuth.getInstance();
         fstore = FirebaseFirestore.getInstance();
@@ -99,6 +101,8 @@ public class MainFragment extends Fragment {
                   fname.setText(value.getString("Name"));
                   femail.setText(value.getString("email"));
                   fmobile.setText(value.getString("mobile"));
+                 played.setText(value.getLong("played").toString());
+              won.setText(value.getLong("wins").toString());
 
 
               }
@@ -161,34 +165,6 @@ public class MainFragment extends Fragment {
         public void onPhotoChangeSelected();
     }
 
-   /* private void updateuserstat(String state){
-        DocumentReference documentReference = fstore.collection("users").document(userID);
-        documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                Map<String, Object> status = new HashMap<>();
-                status.put("status",state);
-                documentReference.update(status);
-            }
-        });
 
-    }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        updateuserstat("online");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        updateuserstat("offline");
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        updateuserstat("offline");
-    }*/
 }

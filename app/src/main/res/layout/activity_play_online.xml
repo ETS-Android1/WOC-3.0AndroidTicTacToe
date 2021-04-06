@@ -5,26 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
-    <TextView
-        android:id="@+id/senderidtext"
-        android:visibility="invisible"
+
+<TextView
+    android:id="@+id/rules"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Rules"
+    android:translationX="310dp"
+    android:textSize="17sp"
+    android:translationY="50dp"
+    />
+
+    <ImageView
+        android:id="@+id/rulesimg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="Senderid"
+        android:src="@drawable/ic_baseline_info_24"
+        android:translationX="280dp"
+        android:translationY="50dp"
         />
-
-    <TextView
-        android:visibility="invisible"
-        android:id="@+id/receiveridtext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="Senderid"
-        android:translationY="20dp"
-        />
-
-
 
     <androidx.cardview.widget.CardView
         android:layout_width="300dp"
@@ -220,21 +219,12 @@
 
 
     <Button
-        android:id="@+id/recordmymove"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Record my move"
-        android:layout_centerHorizontal="true"
-        android:translationY="570dp"
-        />
-
-    <Button
         android:id="@+id/loadmove"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="load opponent move"
         android:layout_centerHorizontal="true"
-        android:translationY="620dp"
+        android:translationY="600dp"
         />
 
 

@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -105,6 +106,10 @@ public class Register extends AppCompatActivity {
                                     Log.d("TAG", "onSuccess: user profile is created for "+ userID);
                                 }
                             });
+                           fstore.collection("users").document(userID).update("wins", FieldValue.increment(1));
+                            fstore.collection("users").document(userID).update("wins", FieldValue.increment(-1));
+                            fstore.collection("users").document(userID).update("played", FieldValue.increment(1));
+                            fstore.collection("users").document(userID).update("played", FieldValue.increment(-1));
                             startActivity(new Intent(getApplicationContext(),MainActivity.class));}
 
                         else{

@@ -46,7 +46,7 @@
 
     <TextView
         android:id="@+id/textView3"
-        android:visibility="invisible"
+
         android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:text="No. of Games Played"
@@ -59,7 +59,7 @@
 
     <TextView
         android:id="@+id/textView4"
-        android:visibility="invisible"
+
         android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:text="No. of Games Won"
@@ -71,11 +71,11 @@
         app:layout_constraintVertical_bias="0.468" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/gamesplayeddisplay"
         android:layout_width="88dp"
         android:layout_height="35dp"
         android:text="----"
-        android:visibility="invisible"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.213"
@@ -84,11 +84,11 @@
         app:layout_constraintVertical_bias="0.56" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/gameswondisplay"
         android:layout_width="88dp"
         android:layout_height="35dp"
         android:text="----"
-        android:visibility="invisible"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.789"

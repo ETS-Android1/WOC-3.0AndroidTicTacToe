@@ -2,13 +2,14 @@ package com.example.bloggerstictactoe;
 
 public class BlogsModel {
     private String content,title,requestid,approve,name;
+    private int likes;
 
     private BlogsModel(){}
 
-    private BlogsModel(String content,String title){
+    private BlogsModel(String content,String title,int likes){
         this.content=content;
         this.title = title;
-
+        this.likes = likes;
     }
 
     public String getContent() {
@@ -49,5 +50,13 @@ public class BlogsModel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
     }
 }
