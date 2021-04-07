@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerphoto = findViewById(R.id.drawerphoto);
 
         Auth = FirebaseAuth.getInstance();
-        userID = Auth.getCurrentUser().getUid();
+       // userID = Auth.getCurrentUser().getUid();
 
 
 

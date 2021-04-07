@@ -44,6 +44,7 @@ public class Users_Blogs extends AppCompatActivity {
     String currentuserid;
     String currentusername;
     private  FirestoreRecyclerAdapter adapter;
+    String myuserid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +58,7 @@ public class Users_Blogs extends AppCompatActivity {
 
         currentuserid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-
+        myuserid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         Query query = fstore.collection("blogs"+userId);
         FirestoreRecyclerOptions<UserBlogsModel> options = new FirestoreRecyclerOptions.Builder<UserBlogsModel>()
@@ -110,6 +111,9 @@ public class Users_Blogs extends AppCompatActivity {
                         });
                     }
                 });
+                if (myuserid.equals(userId)){
+                    holder.optionsimage.setVisibility(View.GONE);
+                }
                 holder.optionsimage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

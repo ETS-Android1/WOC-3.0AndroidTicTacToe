@@ -95,7 +95,17 @@ public class MainFragment extends Fragment {
           startActivity(new Intent(getContext(),Register.class));
       } else{
           DocumentReference documentReference = fstore.collection("users").document(userID);
-          documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+          documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+              @Override
+              public void onSuccess(DocumentSnapshot documentSnapshot) {
+                  fname.setText(documentSnapshot.getString("Name"));
+                  femail.setText(documentSnapshot.getString("email"));
+                  fmobile.setText(documentSnapshot.getString("mobile"));
+                  played.setText(documentSnapshot.getLong("played").toString());
+                  won.setText(documentSnapshot.getLong("wins").toString());
+              }
+          });
+          /*documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
               @Override
               public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                   fname.setText(value.getString("Name"));
@@ -106,7 +116,7 @@ public class MainFragment extends Fragment {
 
 
               }
-          });
+          });*/
       }
         storageReference = FirebaseStorage.getInstance().getReference();
 

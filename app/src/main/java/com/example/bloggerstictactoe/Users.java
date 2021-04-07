@@ -94,6 +94,15 @@ public class Users extends AppCompatActivity {
                 holder.list_mobile.setText(model.getMobile());
                 holder.list_uid.setText(model.getUserUid());
 
+                firebaseFirestore.collection("Friendsof"+userId).document(model.getUserUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()){
+                            holder.buttonaddfriend.setText("Friend Added");
+                        }
+                    }
+                });
+
                 String status = model.getStatus();
 
               /*  if (status.equals("online")){
@@ -124,9 +133,6 @@ public class Users extends AppCompatActivity {
                            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                                currentusername = value.getString("Name");
 
-
-
-
                        Intent i = new Intent(v.getContext(),Users_Blogs.class);
                        i.putExtra("useridforuserblogs",model.getUserUid());
                        i.putExtra("name",currentusername);
@@ -138,11 +144,17 @@ public class Users extends AppCompatActivity {
 
                    }
                });
+                userId = auth.getCurrentUser().getUid();
+                if (model.getUserUid().equals(userId)){
+                    holder.buttonaddfriend.setVisibility(View.GONE);
+                }
                
                holder.buttonaddfriend.setOnClickListener(new View.OnClickListener() {
                    @Override
                    public void onClick(View v) {
-                       userId = auth.getCurrentUser().getUid();
+
+                       if (model.getUserUid().equals(userId)){return;}
+
                        DocumentReference docref = firebaseFirestore.collection("Friendsof"+userId).document(model.getUserUid());
                        Map<String,Object> friend = new HashMap<>();
                        friend.put("userIDoffriend",model.getUserUid());

@@ -145,6 +145,7 @@ public class Friends extends AppCompatActivity {
                                             @Override
                                             public void onSuccess(Void aVoid) {
                                                 Toast.makeText(Friends.this, "Play Request Sent", Toast.LENGTH_SHORT).show();
+                                                startActivity(new Intent(getApplicationContext(),Play.class));
                                             }
                                         });
                                 fstore.collection("play"+userID).document(model.getUserIDoffriend()+"-"+userID)
