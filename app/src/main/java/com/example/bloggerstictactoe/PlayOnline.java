@@ -12,8 +12,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -22,6 +24,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Transaction;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -62,6 +65,73 @@ public class PlayOnline extends AppCompatActivity implements View.OnClickListene
 
         top = findViewById(R.id.top);
         reset = findViewById(R.id.reset);
+
+       /* fstore.collection("play"+receiverid).document(receiverid+"-"+senderid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.getResult().exists()){}
+                else {startActivity(new Intent(getApplicationContext(),Play.class));
+                return;}
+            }
+        });*/
+
+      /*  final DocumentReference sfDocRef = fstore.collection("play" + receiverid).document(receiverid + "-" + senderid);
+        fstore.runTransaction(new Transaction.Function<Void>() {
+            @Nullable
+            @Override
+            public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
+                DocumentSnapshot snapshot = transaction.get(sfDocRef);
+
+                String filled0,filled1,filled2,filled3,filled4,filled5,filled6,filled7,filled8;
+                filled0 = snapshot.getString("tag0");
+                filled1 = snapshot.getString("tag1");
+                filled2 = snapshot.getString("tag2");
+                filled3 = snapshot.getString("tag3");
+                filled4 = snapshot.getString("tag4");
+                filled5 = snapshot.getString("tag5");
+                filled6 = snapshot.getString("tag6");
+                filled7 = snapshot.getString("tag7");
+                filled8 = snapshot.getString("tag8");
+
+
+
+                if (filled0.equals("1 ")){but1.setText("O");filledposition[0] = 1;}
+                if (filled1.equals("1 ")){but2.setText("O");filledposition[1] = 1;}
+                if (filled2.equals("1 ")){but3.setText("O");filledposition[2] = 1;}
+                if (filled3.equals("1 ")){but4.setText("O");filledposition[3] = 1;}
+                if (filled4.equals("1 ")){but5.setText("O");filledposition[4] = 1;}
+                if (filled5.equals("1 ")){but6.setText("O");filledposition[5] = 1;}
+                if (filled6.equals("1 ")){but7.setText("O");filledposition[6] = 1;}
+                if (filled7.equals("1 ")){but8.setText("O");filledposition[7] = 1;}
+                if (filled8.equals("1 ")){but9.setText("O");filledposition[8] = 1;}
+
+                if (filled0.equals("0 ")){but1.setText("X");filledposition[0] = 0;}
+                if (filled1.equals("0 ")){but2.setText("X");filledposition[1] = 0;}
+                if (filled2.equals("0 ")){but3.setText("X");filledposition[2] = 0;}
+                if (filled3.equals("0 ")){but4.setText("X");filledposition[3] = 0;}
+                if (filled4.equals("0 ")){but5.setText("X");filledposition[4] = 0;}
+                if (filled5.equals("0 ")){but6.setText("X");filledposition[5] = 0;}
+                if (filled6.equals("0 ")){but7.setText("X");filledposition[6] = 0;}
+                if (filled7.equals("0 ")){but8.setText("X");filledposition[7] = 0;}
+                if (filled8.equals("0 ")){but9.setText("X");filledposition[8] = 0;}
+
+                if (filled0.equals("-1 ")){but1.setText("");filledposition[0] = -1;}
+                if (filled1.equals("-1 ")){but2.setText("");filledposition[1] = -1;}
+                if (filled2.equals("-1 ")){but3.setText("");filledposition[2] = -1;}
+                if (filled3.equals("-1 ")){but4.setText("");filledposition[3] = -1;}
+                if (filled4.equals("-1 ")){but5.setText("");filledposition[4] = -1;}
+                if (filled5.equals("-1 ")){but6.setText("");filledposition[5] = -1;}
+                if (filled6.equals("-1 ")){but7.setText("");filledposition[6] = -1;}
+                if (filled7.equals("-1 ")){but8.setText("");filledposition[7] = -1;}
+                if (filled8.equals("-1 ")){but9.setText("");filledposition[8] = -1;}
+
+
+                return null;
+            }
+        });*/
+        
+        
+        
 
         if (senderid.equals(userID)) {
             mysymbol = "X";//0
@@ -167,27 +237,75 @@ public class PlayOnline extends AppCompatActivity implements View.OnClickListene
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+                if (active==false){
+                    final DocumentReference sfDocRef = fstore.collection("play" + receiverid).document(receiverid + "-" + senderid);
+                fstore.runTransaction(new Transaction.Function<Void>() {
+                    @Nullable
+                    @Override
+                    public Void apply(@Nullable Transaction transaction) throws FirebaseFirestoreException {
+                        DocumentSnapshot snapshot = transaction.get(sfDocRef);
+
+                        /*Map<String, Object> tag = new HashMap<>();
+                        tag.put("tag0", -1 + " ");
+                        tag.put("tag1", -1 + " ");
+                        tag.put("tag2", -1 + " ");
+                        tag.put("tag3", -1 + " ");
+                        tag.put("tag4", -1 + " ");
+                        tag.put("tag5", -1 + " ");
+                        tag.put("tag6", -1 + " ");
+                        tag.put("tag7", -1 + " ");
+                        tag.put("tag8", -1 + " ");*/
+
+                        transaction.update(sfDocRef, "tag0",-1+" ");
+                        transaction.update(sfDocRef, "tag1",-1+" ");
+                        transaction.update(sfDocRef, "tag2",-1+" ");
+                        transaction.update(sfDocRef, "tag3",-1+" ");
+                        transaction.update(sfDocRef, "tag5",-1+" ");
+                        transaction.update(sfDocRef, "tag6",-1+" ");
+                        transaction.update(sfDocRef, "tag7",-1+" ");
+                        transaction.update(sfDocRef, "tag8",-1+" ");
+                        transaction.update(sfDocRef, "tag4",-1+" ");
+
+
+
+                        return null;
+                    }
+                });
+            }
+
+
+                /*
+                fstore.collection("play"+receiverid).document(receiverid+"-"+senderid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.getResult().exists()){}
+                        else {startActivity(new Intent(getApplicationContext(),Play.class));}
+                    }
+                });
+
                 if (active==false)
                 {
                     fstore.collection("play"+receiverid).document(receiverid+"-"+senderid).delete();
                     fstore.collection("play"+senderid).document(receiverid+"-"+senderid).delete();
 
-                    Map<String, Object> playrequest = new HashMap<>();
-                    playrequest.put("senderid", senderid);
-                    playrequest.put("receiverid", receiverid);
-                    playrequest.put("approve", "true");
-                    playrequest.put("currentuser", userID);
-                    playrequest.put("tag0", -1 + " ");
-                    playrequest.put("tag1", -1 + " ");
-                    playrequest.put("tag2", -1 + " ");
-                    playrequest.put("tag3", -1 + " ");
-                    playrequest.put("tag4", -1 + " ");
-                    playrequest.put("tag5", -1 + " ");
-                    playrequest.put("tag6", -1 + " ");
-                    playrequest.put("tag7", -1 + " ");
-                    playrequest.put("tag8", -1 + " ");
-                    fstore.collection("play" + senderid).document(receiverid + "-" + senderid).set(playrequest);
-                    fstore.collection("play" + receiverid).document(receiverid + "-" + senderid).set(playrequest).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    Map<String, Object> tag = new HashMap<>();
+                    tag.put("senderid", senderid);
+                    tag.put("receiverid", receiverid);
+                    tag.put("approve", "true");
+                    tag.put("currentuser", userID);
+                    tag.put("tag0", -1 + " ");
+                    tag.put("tag1", -1 + " ");
+                    tag.put("tag2", -1 + " ");
+                    tag.put("tag3", -1 + " ");
+                    tag.put("tag4", -1 + " ");
+                    tag.put("tag5", -1 + " ");
+                    tag.put("tag6", -1 + " ");
+                    tag.put("tag7", -1 + " ");
+                    tag.put("tag8", -1 + " ");
+                    fstore.collection("play" + senderid).document(receiverid + "-" + senderid).set(tag);
+                    fstore.collection("play" + receiverid).document(receiverid + "-" + senderid).set(tag).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             startActivity(new Intent(getApplicationContext(), Play.class));
@@ -195,7 +313,7 @@ public class PlayOnline extends AppCompatActivity implements View.OnClickListene
                         }
                     });
                 }
-
+*/
             }
         });
 
@@ -381,25 +499,25 @@ public class PlayOnline extends AppCompatActivity implements View.OnClickListene
                        }
                    });
 
-
+           if (userID.equals(senderid)){
+               Map<String,Object> update = new HashMap<>();
+               update.put("currentuser",receiverid);
+               fstore.collection("play"+receiverid).document(receiverid+"-"+senderid)
+                       .update(update);
+           }
+           else{
+               Map<String,Object> update = new HashMap<>();
+               update.put("currentuser",senderid);
+               fstore.collection("play"+receiverid).document(receiverid+"-"+senderid)
+                       .update(update);
+           }
 
        }
 
 
 
 
-        if (userID.equals(senderid)){
-            Map<String,Object> update = new HashMap<>();
-            update.put("currentuser",receiverid);
-            fstore.collection("play"+receiverid).document(receiverid+"-"+senderid)
-                    .update(update);
-        }
-        else{
-            Map<String,Object> update = new HashMap<>();
-            update.put("currentuser",senderid);
-            fstore.collection("play"+receiverid).document(receiverid+"-"+senderid)
-                    .update(update);
-        }
+
 
 
 
@@ -440,9 +558,5 @@ public class PlayOnline extends AppCompatActivity implements View.OnClickListene
 
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        startActivity(new Intent(getApplicationContext(),Play.class));
-    }
+
 }
