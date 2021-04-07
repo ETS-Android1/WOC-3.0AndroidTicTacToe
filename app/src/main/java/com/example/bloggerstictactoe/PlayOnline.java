@@ -239,7 +239,39 @@ public class PlayOnline extends AppCompatActivity implements View.OnClickListene
             public void onClick(View v) {
 
 
-                if (active==false){
+                if (active==false) {
+                    fstore.runTransaction(new Transaction.Function<Void>() {
+                        @Nullable
+                        @Override
+                        public Void apply(@Nullable Transaction transaction) throws FirebaseFirestoreException {
+                            // DocumentSnapshot snapshot = transaction.get(sfDocRef);
+                            if (transaction != null) {
+                                Map<String, Object> tag = new HashMap<>();
+                                tag.put("tag0", -1 + " ");
+                                tag.put("tag1", -1 + " ");
+                                tag.put("tag2", -1 + " ");
+                                tag.put("tag3", -1 + " ");
+                                tag.put("tag4", -1 + " ");
+                                tag.put("tag5", -1 + " ");
+                                tag.put("tag6", -1 + " ");
+                                tag.put("tag7", -1 + " ");
+                                tag.put("tag8", -1 + " ");
+                                tag.put("approve","true");
+                                transaction.update(fstore.collection("play" + senderid).document(receiverid + "-" + senderid), tag);
+                                transaction.update(fstore.collection("play" + receiverid).document(receiverid + "-" + senderid), tag);
+                            }
+                            return null;
+                        }
+                    }).addOnCompleteListener(task -> {
+
+                    });
+
+                        active=true;
+                }
+
+
+
+                /*{
                     final DocumentReference sfDocRef = fstore.collection("play" + receiverid).document(receiverid + "-" + senderid);
                 fstore.runTransaction(new Transaction.Function<Void>() {
                     @Nullable
@@ -247,7 +279,7 @@ public class PlayOnline extends AppCompatActivity implements View.OnClickListene
                     public Void apply(@Nullable Transaction transaction) throws FirebaseFirestoreException {
                         DocumentSnapshot snapshot = transaction.get(sfDocRef);
 
-                        /*Map<String, Object> tag = new HashMap<>();
+                        Map<String, Object> tag = new HashMap<>();
                         tag.put("tag0", -1 + " ");
                         tag.put("tag1", -1 + " ");
                         tag.put("tag2", -1 + " ");
@@ -256,17 +288,10 @@ public class PlayOnline extends AppCompatActivity implements View.OnClickListene
                         tag.put("tag5", -1 + " ");
                         tag.put("tag6", -1 + " ");
                         tag.put("tag7", -1 + " ");
-                        tag.put("tag8", -1 + " ");*/
+                        tag.put("tag8", -1 + " ");
 
-                        transaction.update(sfDocRef, "tag0",-1+" ");
-                        transaction.update(sfDocRef, "tag1",-1+" ");
-                        transaction.update(sfDocRef, "tag2",-1+" ");
-                        transaction.update(sfDocRef, "tag3",-1+" ");
-                        transaction.update(sfDocRef, "tag5",-1+" ");
-                        transaction.update(sfDocRef, "tag6",-1+" ");
-                        transaction.update(sfDocRef, "tag7",-1+" ");
-                        transaction.update(sfDocRef, "tag8",-1+" ");
-                        transaction.update(sfDocRef, "tag4",-1+" ");
+                        transaction.update(sfDocRef,tag);
+
 
 
 
@@ -274,7 +299,7 @@ public class PlayOnline extends AppCompatActivity implements View.OnClickListene
                     }
                 });
             }
-
+*/
 
                 /*
                 fstore.collection("play"+receiverid).document(receiverid+"-"+senderid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -476,8 +501,32 @@ public class PlayOnline extends AppCompatActivity implements View.OnClickListene
         int clickedtag = Integer.parseInt((v.getTag().toString()));
 
        if (filledposition[clickedtag] ==-1) {
-           fstore.collection("play"+receiverid).document(receiverid+"-"+senderid)
-                   .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+         Task<DocumentSnapshot> docref =   fstore.collection("play"+receiverid).document(receiverid+"-"+senderid).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+             @Override
+             public void onSuccess(DocumentSnapshot documentSnapshot) {
+                 String officiallyconfirmeduser = documentSnapshot.getString("currentuser");
+
+                 if (officiallyconfirmeduser.equals(userID)){
+                     if (userID.equals(senderid)) {
+                         clickedbutton.setText(mysymbol);
+                         filledposition[clickedtag] = 0;
+                     } else {
+                         clickedbutton.setText(mysymbol);
+                         filledposition[clickedtag] = 1;
+
+                     }
+                     Map<String,Object> tag = new HashMap<>();
+                     tag.put("tag"+clickedtag,filledposition[clickedtag]+" ");
+                     fstore.collection("play"+receiverid).document(receiverid+"-"+senderid).update(tag);
+
+
+                 }
+             }
+         });
+
+
+
+                /*   .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                        @Override
                        public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                            String officiallyconfirmeduser = value.getString("currentuser");
@@ -497,7 +546,7 @@ public class PlayOnline extends AppCompatActivity implements View.OnClickListene
 
                            }
                        }
-                   });
+                   });*/
 
            if (userID.equals(senderid)){
                Map<String,Object> update = new HashMap<>();
