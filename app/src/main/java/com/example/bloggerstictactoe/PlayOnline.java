@@ -144,6 +144,15 @@ public class PlayOnline extends AppCompatActivity implements View.OnClickListene
 
         }
 
+        fstore.collection("play"+receiverid).document(receiverid+"-"+senderid).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+           String play = documentSnapshot.getString("approve");
+           if (play.equals("true")){active = true;}
+           else {active = false;}
+            }
+        });
+
         fstore.collection("play"+receiverid).document(receiverid+"-"+senderid)
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
@@ -228,7 +237,14 @@ public class PlayOnline extends AppCompatActivity implements View.OnClickListene
                 checkfordraw();
                 checkforwin();
 
-
+                fstore.collection("play"+receiverid).document(receiverid+"-"+senderid).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        String play = documentSnapshot.getString("approve");
+                        if (play.equals("true")){active = true;}
+                        else {active = false;}
+                    }
+                });
 
 
             }
@@ -257,18 +273,19 @@ public class PlayOnline extends AppCompatActivity implements View.OnClickListene
                                 tag.put("tag7", -1 + " ");
                                 tag.put("tag8", -1 + " ");
                                 tag.put("approve","true");
+                                tag.put("currentuser",userID);
                                 transaction.update(fstore.collection("play" + senderid).document(receiverid + "-" + senderid), tag);
                                 transaction.update(fstore.collection("play" + receiverid).document(receiverid + "-" + senderid), tag);
                             }
                             return null;
                         }
                     }).addOnCompleteListener(task -> {
-
+                        Toast.makeText(PlayOnline.this, "Reset", Toast.LENGTH_SHORT).show();
                     });
 
-                        active=true;
-                }
 
+                }
+                active=true;
 
 
                 /*{
