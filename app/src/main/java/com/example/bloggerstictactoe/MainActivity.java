@@ -187,6 +187,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
            startActivity(new Intent(Intent.ACTION_SENDTO,Uri.parse("mailto:pranaypandeyofficial@gmail.com")));
 
 
+        }if (item.getItemId() ==R.id.knowmore){
+            fragmentManager = getSupportFragmentManager();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container_fragment,new Fragment_knowmore());
+            fragmentTransaction.commit();
         }
 
 

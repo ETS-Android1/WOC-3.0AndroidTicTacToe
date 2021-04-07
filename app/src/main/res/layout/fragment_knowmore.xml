@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="\nA Tic Tac Toe game that allows the user to create blogs.
+The player has to first get registered.\n\n
+The home page displays the no. of games played and won by the user. The game also allows user to
+add a profile picture.\n\n
+Local- The game can be played in offline mode as well- both single and double player.\n\n
+Blogs- Here the user can create and post personal blogs. The user can edit personal blog anytime.\n
+Also the likes on the blogs can be viewed here.\n\n
+Users- All registered users are visible here along with their contact details. There is also an option to
+tag the user by adding them as friend so that they do not have to search for their favourite player to
+play. To view more about a user tap on their icon, you can now view their blogs and react to them.
+Additionally, you can also send a Blog Collaboration Request. You will then be able to edit someone
+else&#39;s blog if they accept your Collaboration request.\n\n
+Friends- All your added friends are displayed here, send them a play request to play with them Tic
+Tac Toe online.\n\n
+Online Play- Tap on Play the Game to play Tic Tac Toe with your friend online.The game can be played with a user only after either you add them as friend or they. Tap on request play from the Friends Tab to play. The rules of the game
+are displayed on the i button on the top right.\n\n
+Tournament- This displays the profile of the user who has won most no. of Tic Tac Toe games.\n
+Contact us- In case you face any problem with playing the game mail us directly by tapping on this
+button.\n\n
+Thank you."
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

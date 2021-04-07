@@ -5,12 +5,7 @@
 
         android:id="@+id/local"
         android:icon="@drawable/ic_baseline_local_play_24"
-        android:title="Local" />
-    <item
-
-        android:id="@+id/play"
-        android:icon="@drawable/ic_baseline_play_arrow_24"
-        android:title="Play" />
+        android:title="Local Play" />
     <item
 
         android:id="@+id/blogs"
@@ -28,9 +23,18 @@
         android:title="Friends" />
     <item
 
+        android:id="@+id/play"
+        android:icon="@drawable/ic_baseline_play_arrow_24"
+        android:title="Online Play" />
+    <item
+
         android:id="@+id/tournament"
         android:icon="@drawable/ic_baseline_tour_24"
         android:title="Tournament" />
+    <item
+        android:id="@+id/knowmore"
+        android:icon="@drawable/ic_baseline_developer_mode_24"
+        android:title="Know More" />
     <item
 
         android:id="@+id/contactus"
