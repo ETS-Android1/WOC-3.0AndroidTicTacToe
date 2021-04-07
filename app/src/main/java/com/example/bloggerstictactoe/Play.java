@@ -73,7 +73,43 @@ public class Play extends AppCompatActivity {
 
                 if (receiverid.equals(userId)){
                     DocumentReference docref = fstore.collection("users").document(senderid);
-                docref.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                docref.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        holder.list_name.setText(documentSnapshot.getString("Name"));
+                        holder.list_email.setText(documentSnapshot.getString("email"));
+                        holder.list_mobile.setText(documentSnapshot.getString("mobile"));
+                        holder.list_uid.setText(documentSnapshot.getString("userUid"));
+                        holder.buttonaddfriend.setText("Play The Game");
+
+                        if( holder.list_uid.getText().toString().isEmpty()){return;}
+                        else {
+                            StorageReference profileref = FirebaseStorage.getInstance().getReference().child("users/"+ holder.list_uid.getText().toString()+"profile.jpg");
+                            profileref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    Picasso.get().load(uri).into(holder.list_image);
+
+                                }
+                            });}
+
+
+
+                        holder.buttonaddfriend.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent i = new Intent(v.getContext(), PlayOnline.class);
+                                i.putExtra("senderid", model.getSenderid());
+                                i.putExtra("receiverid", model.getReceiverid());
+                                v.getContext().startActivity(i);
+
+                            }
+                        });
+                    }
+                });
+
+
+                      /*  .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                         holder.list_name.setText(value.getString("Name"));
@@ -106,7 +142,7 @@ public class Play extends AppCompatActivity {
                             }
                         });
                     }
-                });
+                });*/
                                                                                                     }else{
                     DocumentReference docref = fstore.collection("users").document(receiverid);
                     docref.addSnapshotListener(new EventListener<DocumentSnapshot>() {

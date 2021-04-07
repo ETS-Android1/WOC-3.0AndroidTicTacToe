@@ -73,7 +73,29 @@ public class Friends extends AppCompatActivity {
                 uidofuser = model.getUserIDoffriend();
 
                 DocumentReference docref = fstore.collection("users").document(uidofuser);
-                docref.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                docref.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        holder.list_name.setText(documentSnapshot.getString("Name"));
+                        holder.list_email.setText(documentSnapshot.getString("email"));
+                        holder.list_mobile.setText(documentSnapshot.getString("mobile"));
+
+
+
+                        if( holder.list_uid.getText().toString().isEmpty()){return;}
+                        else {
+                            StorageReference profileref = storageReference.child("users/"+uidofuser+"profile.jpg");
+                            profileref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    Picasso.get().load(uri).into(holder.list_image);
+
+                                }
+                            });}
+                    }
+                });
+
+                      /*  .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                         holder.list_name.setText(value.getString("Name"));
@@ -93,7 +115,7 @@ public class Friends extends AppCompatActivity {
                                 }
                             });}
                     }
-                });
+                });*/
 
                 holder.list_image.setOnClickListener(new View.OnClickListener() {
                     @Override

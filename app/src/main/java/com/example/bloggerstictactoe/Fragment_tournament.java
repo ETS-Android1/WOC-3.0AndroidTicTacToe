@@ -45,7 +45,27 @@ public class Fragment_tournament extends Fragment {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 DocumentSnapshot documentSnapshot =  task.getResult().getDocuments().get(0);
                 String documentID = documentSnapshot.getId();
-                FirebaseFirestore.getInstance().collection("users").document(documentID).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                FirebaseFirestore.getInstance().collection("users").document(documentID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        tourname.setText(documentSnapshot.getString("Name"));
+                        tourmobile.setText(documentSnapshot.getString("mobile"));
+                        touremail.setText(documentSnapshot.getString("email"));
+                        tourplayed.setText(documentSnapshot.getLong("played").toString());
+                        tourwins.setText(documentSnapshot.getLong("wins").toString());
+
+                        FirebaseStorage.getInstance().getReference().child("users/"+documentID+"profile.jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                Picasso.get().load(uri).into(tourimg);
+                            }
+                        });
+                    }
+                });
+
+
+
+                      /*  .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                         tourname.setText(value.getString("Name"));
@@ -62,7 +82,7 @@ public class Fragment_tournament extends Fragment {
                         });
 
                     }
-                });
+                });*/
             }
         });
 

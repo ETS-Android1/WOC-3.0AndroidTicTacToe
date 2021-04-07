@@ -128,7 +128,20 @@ public class Users extends AppCompatActivity {
                    public void onClick(View v) {
 
 
-                       firebaseFirestore.collection("users").document(auth.getCurrentUser().getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                       firebaseFirestore.collection("users").document(auth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                           @Override
+                           public void onSuccess(DocumentSnapshot documentSnapshot) {
+                               currentusername = documentSnapshot.getString("Name");
+
+                               Intent i = new Intent(v.getContext(),Users_Blogs.class);
+                               i.putExtra("useridforuserblogs",model.getUserUid());
+                               i.putExtra("name",currentusername);
+                               v.getContext().startActivity(i);
+                               Toast.makeText(Users.this, "User "+holder.list_name.getText().toString(), Toast.LENGTH_SHORT).show();
+                           }
+                       });
+
+                               /*.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                            @Override
                            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                                currentusername = value.getString("Name");
@@ -140,7 +153,7 @@ public class Users extends AppCompatActivity {
                        Toast.makeText(Users.this, "User "+holder.list_name.getText().toString(), Toast.LENGTH_SHORT).show();
 
                            }
-                       });
+                       });*/
 
                    }
                });
